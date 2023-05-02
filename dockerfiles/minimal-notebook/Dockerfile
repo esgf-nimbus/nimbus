@@ -1,0 +1,15 @@
+ARG TAG=2023-05-01
+FROM jupyter/base-notebook:${TAG}
+
+USER root
+
+RUN groupadd -g 1026 climate && \
+    usermod -a -G climate $NB_USER && \
+    apt-get -q update && \
+    DEBIAN_FRONTEND=noninteractive \
+        apt-get install --yes --no-install-recommends \
+        git less vim unzip rsync openssh-client && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+USER $NB_USER
