@@ -10,6 +10,9 @@ RUN groupadd -g 1026 climate && \
         apt-get install --yes --no-install-recommends \
         git less vim unzip rsync openssh-client && \
     apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+    rm -rf /var/lib/apt/lists/* && \
+    mkdir /notebooks
+
+COPY notebooks/* /notebooks
 
 USER $NB_USER
