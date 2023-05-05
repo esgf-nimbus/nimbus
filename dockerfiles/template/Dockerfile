@@ -1,0 +1,3 @@
+FROM ubuntu:latest
+
+ENV CONTAINER_VERSION 0.1.0
