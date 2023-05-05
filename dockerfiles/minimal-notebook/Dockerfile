@@ -3,7 +3,7 @@ FROM jupyter/base-notebook:${TAG}
 
 USER root
 
-ENV CONTAINER_VERSION 0.1.1
+ENV CONTAINER_VERSION 0.1.2
 
 RUN groupadd -g 1026 climate && \
     usermod -a -G climate $NB_USER && \
