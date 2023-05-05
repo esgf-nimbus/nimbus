@@ -1,3 +1,4 @@
-FROM ubuntu:latest
+ARG TAG=
+FROM ubuntu:${TAG}
 
 ENV CONTAINER_VERSION 0.1.0
