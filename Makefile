@@ -1,12 +1,9 @@
 HUB_REPO ?= jasonb87
 
-MINIMAL_NOTEBOOK_TAG := 0.1.0
+# Rules to be called from dockerfile directory
+# e.g. cd dockerfiles/minimal-notebook; make build-minimal-notebook
+build-%:
+	docker build -t $(HUB_REPO)/$*:$(VERSION) .
 
-
-.PHONY: build-minimal-notebook
-build-minimal-notebook:
-	docker build -t $(HUB_REPO)/minimal-notebook:$(MINIMAL_NOTEBOOK_TAG) dockerfiles/minimal-notebook
-
-.PHONY: push-minimal-notebook
-push-minimal-notebook:
-	docker push $(HUB_REPO)/minimal-notebook:$(MINIMAL_NOTEBOOK_TAG)
+push-%:
+	docker push -t $(HUB_REPO)/$*:$(VERSION)

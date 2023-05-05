@@ -3,6 +3,8 @@ FROM jupyter/base-notebook:${TAG}
 
 USER root
 
+ENV NOTEBOOK_VERSION 0.1.0
+
 RUN groupadd -g 1026 climate && \
     usermod -a -G climate $NB_USER && \
     apt-get -q update && \
