@@ -10,7 +10,18 @@ RUN groupadd -g 1026 climate && \
     apt-get -q update && \
     DEBIAN_FRONTEND=noninteractive \
         apt-get install --yes --no-install-recommends \
-        git less vim unzip rsync openssh-client && \
+        git \
+        less \
+        vim \
+        unzip \
+        rsync \
+        openssh-client \
+        curl \
+        locate \
+        htop \
+        iputils-ping \
+        dnsutils \
+        && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \
     mkdir /notebooks
