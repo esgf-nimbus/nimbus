@@ -6,4 +6,4 @@ build-%:
 	docker build -t $(HUB_REPO)/$*:$(VERSION) .
 
 push-%:
-	docker push -t $(HUB_REPO)/$*:$(VERSION)
+	docker push $(HUB_REPO)/$*:$(VERSION)
