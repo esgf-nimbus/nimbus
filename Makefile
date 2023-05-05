@@ -11,4 +11,4 @@ push-%:
 	docker push $(HUB_REPO)/$*:$(VERSION)
 
 run-%:
-	docker run -it --entrypoint $(SHELL) $(HUB_REPO)/$*:$(VERSION) 
+	docker run -it $(RUN_ARGS) --entrypoint $(SHELL) $(HUB_REPO)/$*:$(VERSION) 
