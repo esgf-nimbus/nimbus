@@ -3,7 +3,7 @@ FROM jupyter/base-notebook:${TAG}
 
 USER root
 
-ENV CONTAINER_VERSION 0.1.2
+ENV CONTAINER_VERSION 0.1.3
 
 RUN groupadd -g 1026 climate && \
     usermod -a -G climate $NB_USER && \
@@ -24,6 +24,7 @@ RUN groupadd -g 1026 climate && \
         && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \
+    pip install nbgitpuller && \
     mkdir /notebooks
 
 COPY notebooks/* /notebooks
