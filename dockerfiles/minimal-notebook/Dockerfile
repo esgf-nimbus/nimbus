@@ -24,6 +24,7 @@ RUN groupadd -g 1026 climate && \
         && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \
+    pip install nbgitpuller && \
     mkdir /notebooks
 
 COPY notebooks/* /notebooks
