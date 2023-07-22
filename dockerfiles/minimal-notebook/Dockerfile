@@ -32,10 +32,7 @@ COPY notebooks /notebooks
 COPY conda-envs /conda-envs
 
 RUN --mount=type=cache,target=/opt/conda/pkgs \
-    mamba env create -n dask-gateway -f /conda-envs/dask-gateway.yaml
+    mamba env create -n dask-gateway -f /conda-envs/dask-gateway.yaml && \
+    jupyter kernelspec install /opt/conda/envs/dask-gateway
 
 USER $NB_USER
-
-RUN source /opt/conda/etc/profile.d/conda.sh && \
-    conda activate dask-gateway && \
-    python -m ipykernel install --user --name dask-gateway
