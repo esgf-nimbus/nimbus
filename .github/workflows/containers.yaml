@@ -73,6 +73,8 @@ jobs:
       - run: |
           pushd dockerfiles/${{ matrix.directories }}
 
+          export DOCKER_BUILDKIT=1
+
           make build
 
           make push
