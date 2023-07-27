@@ -2,6 +2,10 @@
 
 VERSION = 0.1.0
 
-run: COMMAND = /bin/bash
+.PHONY: env-export
+env-export: ARGS = -v $(PWD)/../minimal-notebook/conda-envs:/conda-envs
+env-export: ENTRYPOINT = /bin/bash
+env-export: COMMAND = -c "conda env export -n dask-gateway -f /conda-envs/dask-gateway.yaml"
+env-export: run
 
 include ../Makefile
