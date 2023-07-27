@@ -77,9 +77,6 @@ jobs:
 
           make build
 
-          make push
-          # - uses: docker/build-push-action@v4
-          #   with:
-          #     push: ${{ github.event_name == 'push' }}
-          #     context: dockerfiles/${{ matrix.directories }}
-          #     tags: jasonb87/${{ matrix.directories }}:${{ steps.get-version.outputs.version }}
+          if [[ "${{ github.event_name }}" == "push" ]]; then
+            make push
+          fi
