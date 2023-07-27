@@ -68,10 +68,16 @@ jobs:
       - id: get-version 
         run: |
           pip install tbump
-         
+
           echo "version=$(tbump -C dockerfiles/${{ matrix.directories }} current-version)" >> "$GITHUB_OUTPUT"
-      - uses: docker/build-push-action@v4
-        with:
-          push: ${{ github.event_name == 'push' }}
-          context: dockerfiles/${{ matrix.directories }}
-          tags: jasonb87/${{ matrix.directories }}:${{ steps.get-version.outputs.version }}
+      - run: |
+          pushd dockerfiles/${{ matrix.directories }}
+
+          make build
+
+          make push
+          # - uses: docker/build-push-action@v4
+          #   with:
+          #     push: ${{ github.event_name == 'push' }}
+          #     context: dockerfiles/${{ matrix.directories }}
+          #     tags: jasonb87/${{ matrix.directories }}:${{ steps.get-version.outputs.version }}
