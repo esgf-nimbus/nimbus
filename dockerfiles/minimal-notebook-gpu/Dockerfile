@@ -9,4 +9,8 @@ RUN --mount=type=cache,target=/opt/conda/pkgs \
 	cupy && \
 	chown -R ${NB_UID}:${NB_GID} /home/jovyan
 
+COPY changelog.md /changelog.md
+
+RUN source /scripts/render-intro.sh
+
 USER $NB_USER
