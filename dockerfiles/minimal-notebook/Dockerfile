@@ -28,14 +28,28 @@ RUN groupadd -g 1026 climate && \
     pip install nbgitpuller && \
     mkdir /notebooks
 
-COPY notebooks /notebooks
 COPY conda-envs /conda-envs
 
 RUN --mount=type=cache,target=/opt/conda/pkgs \
-    mamba env create -n dask-gateway -f /conda-envs/dask-gateway.yaml && \
-    source /opt/conda/etc/profile.d/conda.sh && \
-    conda activate dask-gateway && \
-    python -m ipykernel install --name=dask-gateway && \
+    mamba install -y \
+        xcdat \
+        xarray \
+        netcdf4 \
+        intake \
+        intake-esm \
+        intake-stac \
+        intake-xarray \
+        intake-dataframe-catalog
+
+COPY scripts /scripts
+
+RUN --mount=type=cache,target=/opt/conda/pkgs \
+    source /scripts/install-envs.sh && \
     chown -R ${NB_UID}:${NB_GID} /home/jovyan
+
+COPY notebooks /notebooks
+COPY changelog.md /changelog.md
+
+RUN source /scripts/render-intro.sh
 
 USER $NB_USER
