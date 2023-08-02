@@ -127,16 +127,29 @@
     "```\n",
     "> To enable this feature, remove the `.disable-local-data-shortcut` file.\n",
     "### Why is there a `intro.ipynb` in my home directory?\n",
-    "> This is the `Nimbus` introduction guide. It's provided to keep you updated on changes and provide access to an FAQ.\n",
-    "# Changelog\n",
-    "- Initial commit\n",
-    "- Adds nbgitpuller"
+    "> This is the `Nimbus` introduction guide. It's provided to keep you updated on changes and provide access to an FAQ."
    ]
   },
   {
    "cell_type": "code",
    "execution_count": null,
    "id": "13b09108-ab94-4d02-8c42-b74c6631b3c8",
+   "metadata": {
+    "jupyter": {
+     "source_hidden": true
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "from IPython.display import Markdown, display\n",
+    "display(Markdown(\"/changelog.md\"))"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "2322f910-cd56-45db-909f-37457ac218f7",
    "metadata": {},
    "outputs": [],
    "source": []
