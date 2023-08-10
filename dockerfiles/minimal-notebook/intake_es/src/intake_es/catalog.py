@@ -24,6 +24,16 @@ class ElasticSearchCatalog(intake.Catalog):
         skip_client=False,
         **kwargs,
     ):
+        """Elasticsearch intake catalog.
+
+        Args:
+            index: String name of the index to search.
+            host: String url to the Elasticsearch cluster.
+            es_kwargs: Dictionary of arguments to pass Elasticsearch client.
+            search_kwargs: Dictionary of initial search arguments.
+            skip_client: Bool to skip initializing the Elasticsearch client.
+            kwargs: Extra arguments to pass to `intake.Catalog`.
+        """
         super().__init__(**kwargs)
 
         self._index = index
@@ -41,6 +51,17 @@ class ElasticSearchCatalog(intake.Catalog):
         self._entries = {}
 
     def search(self, **kwargs):
+        """Search the Elasticsearch index.
+
+        The values of the search arguments can be a string or list. If a list
+        the each value must be present to match.
+
+        Args:
+            kwargs: Search arguments.
+
+        Examples:
+            >>> cat.search(activity_drs='ScenarioMIP', variable_id=['pr', 'tas'])
+        """
         if len(kwargs) == 0:
             warnings.warn(
                 "No search arguments, this may take awhile",
