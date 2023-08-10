@@ -1,0 +1,14 @@
+metadata:
+  version: 1
+sources:
+  cmip6:
+    description: Local CMIP6 data catalog
+    driver: intake_es.catalog.ElasticSearchCatalog
+    args:
+      index: cmip6
+      host: "{{env(ES_HOST)}}"
+      es_kwargs:
+        verify_certs: False
+        basic_auth: !!python/tuple
+        - "{{env(ES_USER)}}"
+        - "{{env(ES_PASSWORD)}}"

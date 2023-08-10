@@ -11,7 +11,7 @@ push:
 	docker push $(NAMESPACE)/$(REPOSITORY):$(VERSION)
 
 run:
-	docker run -it $(ARGS) $(if $(ENTRYPOINT),--entrypoint $(ENTRYPOINT),) $(NAMESPACE)/$(REPOSITORY):$(VERSION) $(COMMAND)
+	docker run -it $(ARGS) -v $(PWD):/host $(if $(ENTRYPOINT),--entrypoint $(ENTRYPOINT),) $(NAMESPACE)/$(REPOSITORY):$(VERSION) $(COMMAND)
 
 changelog:
 	git log --pretty="%s" . | python -c "import sys;lines=[f'- {x}' if 'Bump' in x else f'  - {x}' for x in sys.stdin]; print(''.join(['# Changelog\n'] + lines))" > changelog.md
