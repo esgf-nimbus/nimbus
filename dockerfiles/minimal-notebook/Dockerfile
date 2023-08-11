@@ -57,7 +57,8 @@ RUN --mount=type=cache,target=/opt/conda/pkgs \
         matplotlib \
         ipywidgets \
         dask-gateway \
-        'bokeh<3'
+        'bokeh<3' && \
+    conda env export -n base -f /base.yaml
 
 COPY --from=intake-es-builder /intake_es/dist /build
 
