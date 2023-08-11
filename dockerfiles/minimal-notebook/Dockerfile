@@ -33,7 +33,6 @@ RUN groupadd -g 1026 climate && \
         curl \
         locate \
         htop \
-        iotop \
         iputils-ping \
         dnsutils \
         && \
@@ -41,8 +40,6 @@ RUN groupadd -g 1026 climate && \
     rm -rf /var/lib/apt/lists/* && \
     pip install nbgitpuller && \
     mkdir /notebooks
-
-COPY conda-envs /conda-envs
 
 RUN --mount=type=cache,target=/opt/conda/pkgs \
     mamba install -y \
@@ -58,19 +55,16 @@ RUN --mount=type=cache,target=/opt/conda/pkgs \
         intake-xarray \
         flox \
         matplotlib \
-        ipywidgets
-
-COPY scripts /scripts
-
-RUN --mount=type=cache,target=/opt/conda/pkgs \
-    source /scripts/install-envs.sh && \
-    chown -R ${NB_UID}:${NB_GID} /home/jovyan
+        ipywidgets \
+        dask-gateway \
+        'bokeh<3'
 
 COPY --from=intake-es-builder /intake_es/dist /build
 
 RUN python -m pip install /build/*.tar.gz && \
     rm -rf /build
 
+COPY scripts /scripts
 COPY notebooks /notebooks
 COPY changelog.md /changelog.md
 

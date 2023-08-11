@@ -77,17 +77,18 @@ class ElasticSearchCatalog(intake.Catalog):
                 self._search_kwargs.update(kwargs)
 
             must_terms = []
+            filter_terms = []
 
             for k, v in self._search_kwargs.items():
                 if isinstance(v, (list, set)):
-                    for x in v:
-                        terms.append({"term": {k: x}})
+                    filter_terms.append({"terms": {k: v}})
                 else:
-                    terms.append({"term": {k: v}})
+                    must_terms.append({"term": {k: v}})
 
             query = {
                 "bool": {
                     "must": must_terms,
+                    "filter": filter_terms,
                 }
             }
 

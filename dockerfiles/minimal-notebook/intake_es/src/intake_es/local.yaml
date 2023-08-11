@@ -12,3 +12,15 @@ sources:
         basic_auth: !!python/tuple
         - "{{env(ES_USER)}}"
         - "{{env(ES_PASSWORD)}}"
+
+  cmip5:
+    description: Local CMIP5 data catalog
+    driver: intake_es.catalog.ElasticSearchCatalog
+    args:
+      index: cmip5
+      host: "{{env(ES_HOST)}}"
+      es_kwargs:
+        verify_certs: False
+        basic_auth: !!python/tuple
+        - "{{env(ES_USER)}}"
+        - "{{env(ES_PASSWORD)}}"
