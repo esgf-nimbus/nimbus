@@ -104,7 +104,7 @@ class ElasticSearchCatalog(intake.Catalog):
         relation = result["hits"]["total"]["relation"]
 
         if total_hits == 10000 and relation == "gte":
-            logger.debug("Pulling additional documents")
+            logging.debug("Pulling additional documents")
 
             for idx in range(10):
                 if len(result["hits"]["hits"]) == 0:
