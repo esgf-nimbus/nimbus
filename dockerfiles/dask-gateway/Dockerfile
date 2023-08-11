@@ -14,13 +14,11 @@ USER dask:conda
 
 WORKDIR /home/dask
 
+COPY --chown=dask:conda conda-envs/ /conda-envs
+
 RUN --mount=type=cache,target=/opt/conda/pkgs \
+	mamba env update -n base -f /conda-envs/base.yaml && \
 	mamba install -y \
-		dask-gateway \
-		tini \
-		ipykernel \
-		'bokeh<3' \
-		xarray \
-		netcdf4
+		tini
 
 ENTRYPOINT ["tini", "-g", "--"]
