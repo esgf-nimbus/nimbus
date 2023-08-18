@@ -1,12 +1,12 @@
 import os
+import fsspec
 import intake
 import elasticsearch
 import logging
 import warnings
 import pandas as pd
+import xcdat
 from intake_xarray.netcdf import NetCDFSource
-
-logging.basicConfig(level=logging.DEBUG)
 
 
 class ESCatalogError(Exception):
@@ -15,6 +15,19 @@ class ESCatalogError(Exception):
 
 class NoResultError(ESCatalogError):
     pass
+
+
+class ESNetCDFSource(NetCDFSource):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    def to_xcdat(self, **kwargs):
+        if self._can_be_local:
+            url = fsspec.open_local(self.urlpath, **self.storage_options)
+        else:
+            url = fsspec.open(self.urlpath, **self.storage_options).open()
+
+        return xcdat.open_mfdataset(url, **kwargs)
 
 
 class ElasticSearchCatalog(intake.Catalog):
@@ -79,6 +92,12 @@ class ElasticSearchCatalog(intake.Catalog):
             return fields
         except Exception:
             raise ESCatalogError("Unable to query field mapping for the index")
+
+    @property
+    def count(self):
+        result = self._client.count(index=self._index)
+
+        return result["count"]
 
     def field_top(self, field):
         aggs = {"unique": {"terms": {"field": field}}}
@@ -146,7 +165,11 @@ class ElasticSearchCatalog(intake.Catalog):
                 index=self._index, query=query, sort=sort, size=10000
             )
             data = result["hits"]["hits"]
-            search_after = result["hits"]["hits"][-1]["sort"]
+
+            try:
+                search_after = result["hits"]["hits"][-1]["sort"]
+            except IndexError:
+                raise ESCatalogError("No results found") from None
 
             while True:
                 result = self._client.search(
@@ -181,7 +204,7 @@ class ElasticSearchCatalog(intake.Catalog):
             cat._df = df
 
             cat._entries = {
-                ".".join(x.values[:-1].tolist()): NetCDFSource(f'{x["path"]}/*.nc')
+                ".".join(x.values[:-1].tolist()): ESNetCDFSource(f'{x["path"]}/*.nc')
                 for _, x in df.iterrows()
             }
 
@@ -202,32 +225,40 @@ class ElasticSearchCatalog(intake.Catalog):
             else:
                 self._search_kwargs.update(kwargs)
 
-            if len(self._search_kwargs) == 1:
-                k, v = list(self._search_kwargs.items())[0]
+            must_terms = []
+            filter_terms = []
+            must_not_terms = []
 
+            for k, v in self._search_kwargs.items():
                 if isinstance(v, (list, set)):
-                    query = {"terms": {k: {"value": v}}}
-                else:
-                    query = {"term": {k: {"value": v}}}
-            else:
-                must_terms = []
-                filter_terms = []
+                    v = list(v)
 
-                for k, v in self._search_kwargs.items():
-                    if isinstance(v, (list, set)):
-                        filter_terms.append({"terms": {k: v}})
+                    negated = [x[1:] for x in v if x.startswith("!")]
+                    filtered = [x for x in v if not x.startswith("!")]
+
+                    if len(negated) > 0:
+                        must_not_terms.append({"terms": {k: negated}})
+
+                    if len(filtered) > 0:
+                        filter_terms.append({"terms": {k: filtered}})
+                else:
+                    if v.startswith("!"):
+                        must_not_terms.append({"term": {k: v[1:]}})
                     else:
                         must_terms.append({"term": {k: v}})
 
-                query_bool = {}
+            query_bool = {}
 
-                if len(must_terms) > 0:
-                    query_bool["must"] = must_terms
+            if len(must_terms) > 0:
+                query_bool["must"] = must_terms
 
-                if len(filter_terms) > 0:
-                    query_bool["filter"] = filter_terms
+            if len(filter_terms) > 0:
+                query_bool["filter"] = filter_terms
 
-                query = {"bool": query_bool}
+            if len(must_not_terms) > 0:
+                query_bool["must_not"] = must_not_terms
+
+            query = {"bool": query_bool}
 
         return query
 
@@ -248,19 +279,33 @@ class ElasticSearchCatalog(intake.Catalog):
         return self._entries[key]
 
     def __repr__(self):
-        if self._df is None:
-            return super().__repr__()
         return f"<{self._index} catalog with {len(self)} datasets>"
 
     def _repr_html_(self):
         if self._df is None:
-            return super().__repr__()
+            return f"<p><strong>{self._index} catalog with {len(self)} datasets</strong></p>"
+
         return self._df._repr_html_()
 
     def _ipython_display_(self):
         from IPython.display import HTML, display
 
         display(HTML(self._repr_html_()))
+
+    def _ipython_key_completions_(self):
+        return list(self)
+
+    def _close(self):
+        self._client.close()
+
+        del self._client
+
+        self._client = None
+
+    def __del__(self):
+        self._close()
+
+        super().__del__()
 
     def unique(self):
         try:
@@ -278,7 +323,7 @@ class ElasticSearchCatalog(intake.Catalog):
 
         return data
 
-    def to_dataset_dict(self):
+    def to_dataset_dict(self, to_xcdat=False, **kwargs):
         if len(self) > 20:
             warnings.warn(
                 "Opening more than 20 datasets, this may take awhile",
@@ -286,9 +331,14 @@ class ElasticSearchCatalog(intake.Catalog):
                 stacklevel=2,
             )
 
-        return {x: self[x].to_dask() for x in list(self)}
+        if to_xcdat:
+            ds_dict = {x: self[x].to_xcdat(**kwargs) for x in list(self)}
+        else:
+            ds_dict = {x: self[x].to_dask() for x in list(self)}
 
-    def to_datatree(self):
+        return ds_dict
+
+    def to_datatree(self, **kwargs):
         try:
             from datatree import DataTree
         except ImportError:
@@ -301,7 +351,7 @@ class ElasticSearchCatalog(intake.Catalog):
                 stacklevel=2,
             )
 
-        datasets = self.to_dataset_dict()
+        datasets = self.to_dataset_dict(**kwargs)
 
         datasets = {x.replace(".", "/"): y for x, y in datasets.items()}
 
