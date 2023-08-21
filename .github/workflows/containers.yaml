@@ -74,7 +74,7 @@ jobs:
           context: dockerfiles/minimal-notebook
           push: ${{ github.event_name == 'push' }}
           tags: ghcr.io/esgf-nimbus/minimal_notebook:${{ steps.get-version.outputs.version }}
-          no-cache: ${{ env.ACT }}
+          no-cache: ${{ env.ACT || false}}
 
   build-containers:
     if: needs.detect-changes.outputs.other_changed > 0
@@ -112,4 +112,4 @@ jobs:
           context: ${{ matrix.directories }}
           push: ${{ github.event_name == 'push' }}
           tags: ${{ steps.get-version.outputs.image }}:${{ steps.get-version.outputs.version }}
-          no-cache: ${{ env.ACT }}
+          no-cache: ${{ env.ACT || false}}
