@@ -78,6 +78,8 @@ jobs:
             cmd="${cmd} --push"
           fi
 
+          cmd="${cmd} ."
+
           eval $cmd
       - uses: actions/upload-artifact@v3
         with:
@@ -126,5 +128,7 @@ jobs:
           if [[ "${{ github.event_name }}" == "push" ]]; then
             cmd="${cmd} --push"
           fi
+
+          cmd="${cmd} ."
 
           eval $cmd
