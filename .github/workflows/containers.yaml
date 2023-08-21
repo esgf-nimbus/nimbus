@@ -78,12 +78,7 @@ jobs:
             args="${args} --push"
           fi
 
-          docker buildx build \
-            --cache-from type=gha \
-            --cache-to type=gha,mode=max \
-            --tag ghcr.io/esgf-nimbus/minimal-notebook:$(tbump current-version) \
-            --output type=docker,dest=/tmp/docker-cache.tar \
-            "${args}" .
+          docker buildx build --cache-from type=gha --cache-to type=gha,mode=max --tag ghcr.io/esgf-nimbus/minimal-notebook:$(tbump current-version) --output type=docker,dest=/tmp/docker-cache.tar "${args}" .
       - uses: actions/upload-artifact@v3
         with:
           name: docker-cache
@@ -132,8 +127,4 @@ jobs:
             args="${args} --push"
           fi
 
-          docker buildx build \
-            --cache-from type=gha \
-            --cache-to type=gha,mode=max \
-            --tag ghcr.io/esgf-nimbus/$(echo ${{ matrix.directories }} | cut -d "/" -f2):$(tbump current-version) \
-            "${args}" .
+          docker buildx build --cache-from type=gha --cache-to type=gha,mode=max --tag ghcr.io/esgf-nimbus/$(echo ${{ matrix.directories }} | cut -d "/" -f2):$(tbump current-version) "${args}" .
