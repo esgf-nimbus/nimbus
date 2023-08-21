@@ -68,26 +68,26 @@ jobs:
       - uses: actions/setup-python@v4
         with:
           python-version: '3.9'
-      - id: get-version
-        run: |
+      - run: |
           pip install tbump
           pushd dockerfiles/minimal-notebook
           make changelog
-          echo "version=$(tbump current-version)" >> $GITHUB_OUTPUT
-      - uses: docker/build-push-action@v4
-        with:
-          context: dockerfiles/minimal-notebook
-          push: ${{ github.event_name == 'push' }}
-          tags: ghcr.io/esgf-nimbus/minimal-notebook:${{ steps.get-version.outputs.version }}
-          no-cache: ${{ env.ACT || false }}
-          cache-from: type=gha
-          cache-to: |
-            type=gha,mode=max
-            type=local,dest=/tmp/cache
+
+          args=""
+          if [[ "${{ github.event_name }}" == "push" ]]; then
+            args="${args} --push"
+          fi
+
+          docker buildx build \
+            --cache-from type=gha \
+            --cache-to type=gha,mode=max \
+            --tag ghcr.io/esgf-nimbus/minimal-notebook:$(tbump current-version) \
+            --output type=docker,dest=/tmp/docker-cache.tar \
+            "${args}" .
       - uses: actions/upload-artifact@v3
         with:
           name: docker-cache
-          path: /tmp/cache
+          path: /tmp/docker-cache.tar
 
   build-containers:
     if: needs.detect-changes.outputs.other_changed > 0
@@ -115,26 +115,25 @@ jobs:
         continue-on-error: true
         with:
           name: docker-cache
-          path: /tmp/cache
+          path: /tmp
+      - if: success()
+        run: |
+          docker load --input /tmp/docker-cache.tar
       - uses: actions/setup-python@v4
         with:
           python-version: '3.9'
-      - id: get-version
-        run: |
+      - run: |
           pip install tbump
           pushd ${{ matrix.directories }}
           make changelog
-          echo "version=$(tbump current-version)" >> $GITHUB_OUTPUT
-          echo "image=ghcr.io/esgf-nimbus/$(echo ${{ matrix.directories }} | cut -d'/' -f2)" >> $GITHUB_OUTPUT
-      - uses: docker/build-push-action@v4
-        with:
-          context: ${{ matrix.directories }}
-          load: true
-          pull: true
-          push: ${{ github.event_name == 'push' }}
-          tags: ${{ steps.get-version.outputs.image }}:${{ steps.get-version.outputs.version }}
-          no-cache: ${{ env.ACT || false }}
-          cache-from: |
-            type=gha
-            type=local,src=/tmp/cache
-          cache-to: type=gha,mode=max
+
+          args=""
+          if [[ "${{ github.event_name }}" == "push" ]]; then
+            args="${args} --push"
+          fi
+
+          docker buildx build \
+            --cache-from type=gha \
+            --cache-to type=gha,mode=max \
+            --tag ghcr.io/esgf-nimbus/$(echo ${{ matrix.directories }} | cut -d "/" -f2):$(tbump current-version) \
+            "${args}" .
