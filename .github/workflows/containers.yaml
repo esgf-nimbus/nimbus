@@ -79,7 +79,14 @@ jobs:
           context: dockerfiles/minimal-notebook
           push: ${{ github.event_name == 'push' }}
           tags: ghcr.io/esgf-nimbus/minimal_notebook:${{ steps.get-version.outputs.version }}
-          no-cache: ${{ env.ACT || false}}
+          no-cache: ${{ env.ACT || false }}
+          outputs: type=docker,dest=/tmp/base.tar
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - uses: actions/upload-artifact@v3
+        with:
+          name: base
+          path: /tmp/base.tar
 
   build-containers:
     if: needs.detect-changes.outputs.other_changed > 0
@@ -102,6 +109,15 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/download-artifact@v3
+        # ignore if the artifact doesn't exist
+        continue-on-error: true
+        with:
+          name: base
+          path: /tmp
+      - if: success()
+        run: |
+          docker load --input /tmp/base.tar
       - uses: actions/setup-python@v4
         with:
           python-version: '3.9'
@@ -117,4 +133,6 @@ jobs:
           context: ${{ matrix.directories }}
           push: ${{ github.event_name == 'push' }}
           tags: ${{ steps.get-version.outputs.image }}:${{ steps.get-version.outputs.version }}
-          no-cache: ${{ env.ACT || false}}
+          no-cache: ${{ env.ACT || false }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
