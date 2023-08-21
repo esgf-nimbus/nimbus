@@ -19,20 +19,35 @@ jobs:
     name: Detect changes to Dockerfiles
     permissions:
       pull-requests: read
+    outputs:
+      all_changed_files_count: ${{ steps.changed-files.outputs.all_changed_files_count }}
+      other_changed: ${{ steps.format-others.outputs.other_changed }}
+      other_changed_directories: ${{ steps.format-others.outputs.other_changed_directories }}
     steps:
       - uses: actions/checkout@v3
       - name: Get changed files
         id: changed-files
         uses: tj-actions/changed-files@v37
+        with:
+          json: true
+          # needed if testing with PR using act tool
+          sha: 'main'
+          # sha: 'head'
+          dir_names: true
+          dir_names_max_depth: 2
+          files: dockerfiles/minimal-notebook/**
+      - name: Format other changed files
+        id: format-others
+        run: |
+          others=$(python -c 'import json;i="${{ steps.changed-files.outputs.other_changed_files }}";d=json.loads("[]" if i == "" else i);x=list(set(d)-{"dockerfiles/minimal-notebook"});y={"directories":x};print(f"{json.dumps(y)}|{len(x)}")')
+          echo "other_changed_directories=$(echo ${others} | cut -d'|' -f1)" >> $GITHUB_OUTPUT
+          echo "other_changed=$(echo ${others} | cut -d'|' -f2)" >> $GITHUB_OUTPUT
 
-
-  build-containers:
-    if: ${{ fromJSON(needs.detect-changes.outputs.changed) }}
-    needs: detect-changes
+  build-base-container:
+    if: needs.detect-changes.outputs.all_changed_files_count > 0
     runs-on: ubuntu-latest
-    name: Build containers
-    strategy:
-      matrix: ${{ fromJSON(needs.detect-changes.outputs.directories) }}
+    name: Build minimal-notebook container if changed
+    needs: detect-changes
     permissions:
       packages: write
     steps:
@@ -48,18 +63,53 @@ jobs:
       - uses: actions/setup-python@v4
         with:
           python-version: '3.9'
-      - id: get-version 
+      - id: get-version
         run: |
           pip install tbump
+          pushd dockerfiles/minimal-notebook
+          make changelog
+          echo "version=$(tbump current-version)" >> $GITHUB_OUTPUT
+      - uses: docker/build-push-action@v4
+        with:
+          context: dockerfiles/minimal-notebook
+          push: ${{ github.event_name == 'push' }}
+          tags: ghcr.io/esgf-nimbus/minimal_notebook:${{ steps.get-version.outputs.version }}
+          no-cache: ${{ env.ACT }}
 
-          echo "version=$(tbump -C dockerfiles/${{ matrix.directories }} current-version)" >> "$GITHUB_OUTPUT"
-      - run: |
-          pushd dockerfiles/${{ matrix.directories }}
-
-          export DOCKER_BUILDKIT=1
-
-          make build
-
-          if [[ "${{ github.event_name }}" == "push" ]]; then
-            make push
-          fi
+  build-containers:
+    if: needs.detect-changes.outputs.other_changed > 0
+    runs-on: ubuntu-latest
+    name: Build other containers
+    needs:
+      - detect-changes
+      - build-base-container
+    permissions:
+      packages: write
+    strategy:
+      matrix: ${{ fromJSON(needs.detect-changes.outputs.other_changed_directories) }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: docker/setup-qemu-action@v2
+      - uses: docker/setup-buildx-action@v2
+      - uses: docker/login-action@v2
+        if: github.event_name == 'push'
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+      - id: get-version
+        run: |
+          pip install tbump
+          pushd ${{ matrix.directories }}
+          make changelog
+          echo "version=$(tbump current-version)" >> $GITHUB_OUTPUT
+          echo "image=ghcr.io/esgf-nimbus/$(echo ${{ matrix.directories }} | cut -d'/' -f2)" >> $GITHUB_OUTPUT
+      - uses: docker/build-push-action@v4
+        with:
+          context: ${{ matrix.directories }}
+          push: ${{ github.event_name == 'push' }}
+          tags: ${{ steps.get-version.outputs.image }}:${{ steps.get-version.outputs.version }}
+          no-cache: ${{ env.ACT }}
