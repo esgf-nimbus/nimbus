@@ -31,7 +31,7 @@ jobs:
         with:
           json: true
           # needed if testing with PR using act tool
-          sha: 'main'
+          # sha: 'main'
           # sha: 'head'
           dir_names: true
           dir_names_max_depth: 2
