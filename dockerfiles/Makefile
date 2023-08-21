@@ -15,3 +15,6 @@ run:
 
 changelog:
 	git log --pretty="%s" . | python -c "import sys;lines=[f'- {x}' if 'Bump' in x else f'  - {x}' for x in sys.stdin]; print(''.join(['# Changelog\n'] + lines))" > changelog.md
+
+bump-%:
+	tbump --dry-run --no-tag $(shell pysemver bump $* $(shell tbump current-version))
