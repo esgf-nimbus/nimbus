@@ -1,6 +1,6 @@
 .DEFAULT_GOAL = build
 
-VERSION = 0.1.13
+VERSION = 0.1.14
 
 run: ARGS = -p 8888:8888 -v $(PWD)/../dask-gateway/conda-envs:/conda-envs
 

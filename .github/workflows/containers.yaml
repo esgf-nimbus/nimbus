@@ -13,45 +13,46 @@ on:
     paths:
       - 'dockerfiles/**'
 
+concurrency:
+  group: ${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
 jobs:
   detect-changes:
     runs-on: ubuntu-latest
     name: Detect changes to Dockerfiles
-    outputs:
-      directories: ${{ steps.list-changed-files.outputs.output }}
-      changed: ${{ steps.list-changed-files.outputs.changed }}
     permissions:
       pull-requests: read
+    outputs:
+      all_changed_files_count: ${{ steps.changed-files.outputs.all_changed_files_count }}
+      other_changed: ${{ steps.format-others.outputs.other_changed }}
+      other_changed_directories: ${{ steps.format-others.outputs.other_changed_directories }}
     steps:
       - uses: actions/checkout@v3
-        with:
-          fetch-depth: 2
       - name: Get changed files
         id: changed-files
         uses: tj-actions/changed-files@v37
         with:
           json: true
+          # needed if testing with PR using act tool
+          # sha: 'main'
+          # sha: 'head'
           dir_names: true
           dir_names_max_depth: 2
-          files: dockerfiles/**
-          files_ignore: dockerfiles/template
-      - name: List all changed files
-        id: list-changed-files
+          files: dockerfiles/minimal-notebook/**
+          files_ignore: .github/**
+      - name: Format other changed files
+        id: format-others
         run: |
-          changed_files="${{ steps.changed-files.outputs.all_changed_files }}"
-          containers="$(echo ${changed_files} | python -c 'import sys, json; print(json.dumps([x.split("/")[1] for x in json.loads(sys.stdin.read()) if "/" in x]))')"
-          changed="$(echo ${containers} | python -c 'import sys, json; print("true" if len(json.loads(sys.stdin.read())) > 0 else "false")')"
+          others=$(python -c 'import json;i="${{ steps.changed-files.outputs.other_changed_files }}";d=json.loads("[]" if i == "" else i);x=list(set(d)-{"dockerfiles/minimal-notebook"});y={"directories":[x for x in x if "docker" in x and len(x.split("/"))==2]};print(f"{json.dumps(y)}|{len(x)}")')
+          echo "other_changed_directories=$(echo ${others} | cut -d'|' -f1)" >> $GITHUB_OUTPUT
+          echo "other_changed=$(echo ${others} | cut -d'|' -f2)" >> $GITHUB_OUTPUT
 
-          echo "output={\"directories\":${containers}}" >> "$GITHUB_OUTPUT"
-          echo "changed=${changed}" >> "$GITHUB_OUTPUT"
-
-  build-containers:
-    if: ${{ fromJSON(needs.detect-changes.outputs.changed) }}
-    needs: detect-changes
+  build-base-container:
+    if: needs.detect-changes.outputs.all_changed_files_count > 0
     runs-on: ubuntu-latest
-    name: Build containers
-    strategy:
-      matrix: ${{ fromJSON(needs.detect-changes.outputs.directories) }}
+    name: Build minimal-notebook container if changed
+    needs: detect-changes
     permissions:
       packages: write
     steps:
@@ -67,18 +68,67 @@ jobs:
       - uses: actions/setup-python@v4
         with:
           python-version: '3.9'
-      - id: get-version 
-        run: |
-          pip install tbump
-
-          echo "version=$(tbump -C dockerfiles/${{ matrix.directories }} current-version)" >> "$GITHUB_OUTPUT"
       - run: |
-          pushd dockerfiles/${{ matrix.directories }}
+          pip install tbump
+          pushd dockerfiles/minimal-notebook
+          make changelog
 
-          export DOCKER_BUILDKIT=1
-
-          make build
-
+          cmd="/usr/bin/docker buildx build --cache-from type=gha --cache-to type=gha,mode=max --tag ghcr.io/esgf-nimbus/minimal-notebook:$(tbump current-version) --output type=docker,dest=/tmp/docker-cache.tar"
           if [[ "${{ github.event_name }}" == "push" ]]; then
-            make push
+            cmd="${cmd} --push"
           fi
+
+          cmd="${cmd} ."
+
+          eval $cmd
+      - uses: actions/upload-artifact@v3
+        with:
+          name: docker-cache
+          path: /tmp/docker-cache.tar
+
+  build-containers:
+    if: needs.detect-changes.outputs.other_changed > 0
+    runs-on: ubuntu-latest
+    name: Build other containers
+    needs:
+      - detect-changes
+      - build-base-container
+    permissions:
+      packages: write
+    strategy:
+      matrix: ${{ fromJSON(needs.detect-changes.outputs.other_changed_directories) }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: docker/setup-qemu-action@v2
+      - uses: docker/setup-buildx-action@v2
+      - uses: docker/login-action@v2
+        if: github.event_name == 'push'
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/download-artifact@v3
+        # ignore if the artifact doesn't exist
+        continue-on-error: true
+        with:
+          name: docker-cache
+          path: /tmp
+      - if: success()
+        run: |
+          docker load --input /tmp/docker-cache.tar
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+      - run: |
+          pip install tbump
+          pushd ${{ matrix.directories }}
+          make changelog
+
+          cmd="/usr/bin/docker buildx build --cache-from type=gha --cache-to type=gha,mode=max --tag ghcr.io/esgf-nimbus/minimal-notebook:$(tbump current-version) --output type=docker,dest=/tmp/docker-cache.tar"
+          if [[ "${{ github.event_name }}" == "push" ]]; then
+            cmd="${cmd} --push"
+          fi
+
+          cmd="${cmd} ."
+
+          eval $cmd
