@@ -44,7 +44,7 @@ jobs:
       - name: Format other changed files
         id: format-others
         run: |
-          others=$(python -c 'import json;i="${{ steps.changed-files.outputs.other_changed_files }}";d=json.loads("[]" if i == "" else i);x=list(set(d)-{"dockerfiles/minimal-notebook"});y={"directories":[x for x in x if "docker" in x]};print(f"{json.dumps(y)}|{len(x)}")')
+          others=$(python -c 'import json;i="${{ steps.changed-files.outputs.other_changed_files }}";d=json.loads("[]" if i == "" else i);x=list(set(d)-{"dockerfiles/minimal-notebook"});y={"directories":[x for x in x if "docker" in x and len(x.split("/"))==2]};print(f"{json.dumps(y)}|{len(x)}")')
           echo "other_changed_directories=$(echo ${others} | cut -d'|' -f1)" >> $GITHUB_OUTPUT
           echo "other_changed=$(echo ${others} | cut -d'|' -f2)" >> $GITHUB_OUTPUT
 
