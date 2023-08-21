@@ -114,8 +114,8 @@ jobs:
         # ignore if the artifact doesn't exist
         continue-on-error: true
         with:
-          name: base
-          path: /tmp
+          name: docker-cache
+          path: /tmp/cache
       - uses: actions/setup-python@v4
         with:
           python-version: '3.9'
