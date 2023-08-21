@@ -73,12 +73,12 @@ jobs:
           pushd dockerfiles/minimal-notebook
           make changelog
 
-          args=""
+          cmd="/usr/bin/docker buildx build --cache-from type=gha --cache-to type=gha,mode=max --tag ghcr.io/esgf-nimbus/minimal-notebook:$(tbump current-version) --output type=docker,dest=/tmp/docker-cache.tar"
           if [[ "${{ github.event_name }}" == "push" ]]; then
-            args="${args} --push"
+            cmd="${cmd} --push"
           fi
 
-          /usr/bin/docker buildx build --cache-from type=gha --cache-to type=gha,mode=max --tag ghcr.io/esgf-nimbus/minimal-notebook:$(tbump current-version) --output type=docker,dest=/tmp/docker-cache.tar "${args}" .
+          eval $cmd
       - uses: actions/upload-artifact@v3
         with:
           name: docker-cache
@@ -122,9 +122,9 @@ jobs:
           pushd ${{ matrix.directories }}
           make changelog
 
-          args=""
+          cmd="/usr/bin/docker buildx build --cache-from type=gha --cache-to type=gha,mode=max --tag ghcr.io/esgf-nimbus/minimal-notebook:$(tbump current-version) --output type=docker,dest=/tmp/docker-cache.tar"
           if [[ "${{ github.event_name }}" == "push" ]]; then
-            args="${args} --push"
+            cmd="${cmd} --push"
           fi
 
-          /usr/bin/docker buildx build --cache-from type=gha --cache-to type=gha,mode=max --tag ghcr.io/esgf-nimbus/$(echo ${{ matrix.directories }} | cut -d "/" -f2):$(tbump current-version) "${args}" .
+          eval $cmd
