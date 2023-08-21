@@ -17,33 +17,14 @@ jobs:
   detect-changes:
     runs-on: ubuntu-latest
     name: Detect changes to Dockerfiles
-    outputs:
-      directories: ${{ steps.list-changed-files.outputs.output }}
-      changed: ${{ steps.list-changed-files.outputs.changed }}
     permissions:
       pull-requests: read
     steps:
       - uses: actions/checkout@v3
-        with:
-          fetch-depth: 2
       - name: Get changed files
         id: changed-files
         uses: tj-actions/changed-files@v37
-        with:
-          json: true
-          dir_names: true
-          dir_names_max_depth: 2
-          files: dockerfiles/**
-          files_ignore: dockerfiles/template
-      - name: List all changed files
-        id: list-changed-files
-        run: |
-          changed_files="${{ steps.changed-files.outputs.all_changed_files }}"
-          containers="$(echo ${changed_files} | python -c 'import sys, json; print(json.dumps([x.split("/")[1] for x in json.loads(sys.stdin.read()) if "/" in x]))')"
-          changed="$(echo ${containers} | python -c 'import sys, json; print("true" if len(json.loads(sys.stdin.read())) > 0 else "false")')"
 
-          echo "output={\"directories\":${containers}}" >> "$GITHUB_OUTPUT"
-          echo "changed=${changed}" >> "$GITHUB_OUTPUT"
 
   build-containers:
     if: ${{ fromJSON(needs.detect-changes.outputs.changed) }}
