@@ -78,7 +78,7 @@ jobs:
         with:
           context: dockerfiles/minimal-notebook
           push: ${{ github.event_name == 'push' }}
-          tags: ghcr.io/esgf-nimbus/minimal_notebook:${{ steps.get-version.outputs.version }}
+          tags: ghcr.io/esgf-nimbus/minimal-notebook:${{ steps.get-version.outputs.version }}
           no-cache: ${{ env.ACT || false }}
           outputs: type=docker,dest=/tmp/base.tar
           cache-from: type=gha
