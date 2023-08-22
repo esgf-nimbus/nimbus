@@ -24,43 +24,36 @@ jobs:
     permissions:
       pull-requests: read
     outputs:
-      all_changed_files_count: ${{ steps.changed-files.outputs.all_changed_files_count }}
-      other_changed: ${{ steps.format-others.outputs.other_changed }}
-      other_changed_directories: ${{ steps.format-others.outputs.other_changed_directories }}
+      modified_files_count: ${{ steps.changed-files.outputs.modified_files_count }}
+      other_modified_files_count: ${{ steps.changed-files.outputs.other_modified_files_count }}
+      directories: ${{ steps.format.outputs.directories }}
     steps:
       - uses: actions/checkout@v3
-      - name: Get changed files
+      - name: Detect changed files
         id: changed-files
         uses: tj-actions/changed-files@v37
         with:
-          json: true
-          # needed if testing with PR using act tool
-          # sha: 'main'
-          # sha: 'head'
+          path: dockerfiles
           dir_names: true
-          dir_names_max_depth: 2
-          files: dockerfiles/minimal-notebook/**
-          files_ignore: .github/**
-      - name: Format other changed files
-        id: format-others
+          dir_names_max_depth: 1
+          dir_names_exclude_current_dir: true
+          files: minimal-notebook/**
+      - id: format
         run: |
-          others=$(python -c 'import json;i="${{ steps.changed-files.outputs.other_changed_files }}";d=json.loads("[]" if i == "" else i);x=list(set(d)-{"dockerfiles/minimal-notebook"});y={"directories":[x for x in x if "docker" in x and len(x.split("/"))==2]};print(f"{json.dumps(y)}|{len(x)}")')
-          echo "other_changed_directories=$(echo ${others} | cut -d'|' -f1)" >> $GITHUB_OUTPUT
-          echo "other_changed=$(echo ${others} | cut -d'|' -f2)" >> $GITHUB_OUTPUT
+          echo "${{ steps.changed-files.outputs.other_modified_files }}" | python -c "import sys,json;d=json.dumps({'directories': sys.stdin.read().strip().split(' ')});print(f'directories={d}')" >> $GITHUB_OUTPUT
 
   build-base-container:
-    if: needs.detect-changes.outputs.all_changed_files_count > 0
+    if: needs.detect-changes.outputs.modified_files_count > 0
+    needs:
+      - detect-changes
     runs-on: ubuntu-latest
-    name: Build minimal-notebook container if changed
-    needs: detect-changes
+    name: Build base container
     permissions:
       packages: write
     steps:
       - uses: actions/checkout@v3
-      - uses: docker/setup-qemu-action@v2
       - uses: docker/setup-buildx-action@v2
       - uses: docker/login-action@v2
-        if: github.event_name == 'push'
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
@@ -68,67 +61,74 @@ jobs:
       - uses: actions/setup-python@v4
         with:
           python-version: '3.9'
-      - run: |
+      - id: get-version
+        run: |
           pip install tbump
           pushd dockerfiles/minimal-notebook
           make changelog
-
-          cmd="/usr/bin/docker buildx build --cache-from type=gha --cache-to type=gha,mode=max --tag ghcr.io/esgf-nimbus/minimal-notebook:$(tbump current-version) --output type=docker,dest=/tmp/docker-cache.tar"
-          if [[ "${{ github.event_name }}" == "push" ]]; then
-            cmd="${cmd} --push"
-          fi
-
-          cmd="${cmd} ."
-
-          eval $cmd
-      - uses: actions/upload-artifact@v3
+          echo "version=$(tbump current-version)" >> $GITHUB_OUTPUT
+      - uses: docker/build-push-action@v4
+        if: github.event_name == 'pull_request'
         with:
-          name: docker-cache
-          path: /tmp/docker-cache.tar
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          context: dockerfiles/minimal-notebook
+          pull: true
+          push: true
+          tags: ghcr.io/esgf-nimbus/minimal-notebook:cache
+      - uses: docker/build-push-action@v4
+        if: github.event_name == 'push'
+        with:
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          context: dockerfiles/minimal-notebook
+          pull: true
+          push: true
+          tags: ghcr.io/esgf-nimbus/minimal-notebook:${{ steps.get-version.outputs.version }}
 
-  build-containers:
-    if: needs.detect-changes.outputs.other_changed > 0
-    runs-on: ubuntu-latest
-    name: Build other containers
+  build-other-containers:
+    if: always() && needs.detect-changes.outputs.other_modified_files_count > 0
     needs:
       - detect-changes
       - build-base-container
+    runs-on: ubuntu-latest
+    name: Build other containers
     permissions:
       packages: write
     strategy:
-      matrix: ${{ fromJSON(needs.detect-changes.outputs.other_changed_directories) }}
+      matrix: ${{ fromJSON(needs.detect-changes.outputs.directories) }}
     steps:
       - uses: actions/checkout@v3
-      - uses: docker/setup-qemu-action@v2
       - uses: docker/setup-buildx-action@v2
       - uses: docker/login-action@v2
-        if: github.event_name == 'push'
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - uses: actions/download-artifact@v3
-        # ignore if the artifact doesn't exist
-        continue-on-error: true
-        with:
-          name: docker-cache
-          path: /tmp
-      - if: success()
-        run: |
-          docker load --input /tmp/docker-cache.tar
       - uses: actions/setup-python@v4
         with:
           python-version: '3.9'
-      - run: |
+      - id: get-version
+        run: |
           pip install tbump
-          pushd ${{ matrix.directories }}
+          pushd dockerfiles/${{ matrix.directories }}
           make changelog
-
-          cmd="/usr/bin/docker buildx build --cache-from type=gha --cache-to type=gha,mode=max --tag ghcr.io/esgf-nimbus/minimal-notebook:$(tbump current-version) --output type=docker,dest=/tmp/docker-cache.tar"
-          if [[ "${{ github.event_name }}" == "push" ]]; then
-            cmd="${cmd} --push"
-          fi
-
-          cmd="${cmd} ."
-
-          eval $cmd
+          echo "version=$(tbump current-version)" >> $GITHUB_OUTPUT
+      - uses: docker/build-push-action@v4
+        if: github.event_name == 'pull_request'
+        with:
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          context: dockerfiles/${{ matrix.directories }}
+          pull: true
+          push: true
+          tags: ghcr.io/esgf-nimbus/${{ matrix.directories }}:cache
+      - uses: docker/build-push-action@v4
+        if: github.event_name == 'push'
+        with:
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          context: dockerfiles/${{ matrix.directories }}
+          pull: true
+          push: true
+          tags: ghcr.io/esgf-nimbus/${{ matrix.directories }}:${{ steps.get-version.outputs.version }}
