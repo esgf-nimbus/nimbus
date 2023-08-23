@@ -45,6 +45,7 @@ RUN --mount=type=cache,target=/opt/conda/pkgs \
     mamba install -y \
         xcdat \
         xarray \
+        xarray-datatree \
         netcdf4 \
         pandas \
         s3fs \
@@ -55,6 +56,7 @@ RUN --mount=type=cache,target=/opt/conda/pkgs \
         intake-xarray \
         flox \
         matplotlib \
+        nc-time-axis \
         ipywidgets \
         dask-gateway \
         'bokeh<3' && \
