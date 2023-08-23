@@ -3,10 +3,14 @@ import fsspec
 import intake
 import elasticsearch
 import logging
-import warnings
 import pandas as pd
 import xcdat
-from intake_xarray.netcdf import NetCDFSource
+import xarray as xr
+from intake.catalog.base import Catalog
+from intake.catalog.utils import reload_on_change
+from intake.source.base import DataSourceBase, Schema
+
+logger = logging.getLogger("intake_es")
 
 
 class ESCatalogError(Exception):
@@ -17,22 +21,83 @@ class NoResultError(ESCatalogError):
     pass
 
 
-class ESNetCDFSource(NetCDFSource):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-    def to_xcdat(self, **kwargs):
-        if self._can_be_local:
-            url = fsspec.open_local(self.urlpath, **self.storage_options)
-        else:
-            url = fsspec.open(self.urlpath, **self.storage_options).open()
-
-        return xcdat.open_mfdataset(url, **kwargs)
-
-
-class ElasticSearchCatalog(intake.Catalog):
-    name = "elasticsearch"
+class ESXarraySource(DataSourceBase):
     container = "xarray"
+    name = "es-xarray"
+
+    def __init__(
+        self, urlpath, xarray_kwargs=None, storage_options=None, metadata=None
+    ):
+        super().__init__(metadata=metadata)
+
+        self._xarray_kwargs = xarray_kwargs or {}
+        self._storage_options = storage_options or {}
+
+        if "chunks" not in self._xarray_kwargs:
+            self._xarray_kwargs["chunks"] = "auto"
+
+        self._urlpath = urlpath
+        self._ds = None
+        self._schema = None
+
+    def _get_schema(self):
+        if self._ds is None:
+            url = fsspec.open_local(self._urlpath, **self._storage_options)
+
+            xr_kwargs = self._xarray_kwargs.copy()
+            use_xcdat = xr_kwargs.pop("xcdat", False)
+
+            if use_xcdat:
+                self._ds = xcdat.open_mfdataset(url, **xr_kwargs)
+            else:
+                self._ds = xr.open_mfdataset(url, **xr_kwargs)
+
+            metadata = {
+                "dims": dict(self._ds.dims),
+                "data_vars": {
+                    k: list(self._ds[k].coords) for k in self._ds.data_vars.keys()
+                },
+                "coords": tuple(self._ds.coords.keys()),
+            }
+
+            metadata.update(self._ds.attrs)
+
+            self._schema = Schema(
+                datashape=None,
+                dtype=None,
+                shape=None,
+                npartitions=None,
+                extra_metadata=metadata,
+            )
+
+        return self._schema
+
+    def read(self):
+        self._load_metadata()
+        return self._ds.load()
+
+    def read_chunked(self):
+        self._load_metadata()
+        return self._ds
+
+    def to_dask(self):
+        return self.read_chunked()
+
+    def to_xarray(self):
+        return self.read_chunked()
+
+    def to_xcdat(self):
+        self._xarray_kwargs["xcdat"] = True
+        return self.read_chunked()
+
+    def _close(self):
+        if sel._ds is not None:
+            self._ds.close()
+
+
+class ElasticSearchCatalog(Catalog):
+    name = "elasticsearch"
+    container = "catalog"
     auth = None
 
     def __init__(
@@ -41,195 +106,117 @@ class ElasticSearchCatalog(intake.Catalog):
         *,
         host=None,
         es_kwargs=None,
-        search_kwargs=None,
+        xarray_kwargs=None,
         skip_client=False,
-        **kwargs,
+        **intake_kwargs,
     ):
-        """Elasticsearch intake catalog.
-
-        Args:
-            index: String name of the index to search.
-            host: String url to the Elasticsearch cluster.
-            es_kwargs: Dictionary of arguments to pass Elasticsearch client.
-            search_kwargs: Dictionary of initial search arguments.
-            skip_client: Bool to skip initializing the Elasticsearch client.
-            kwargs: Extra arguments to pass to `intake.Catalog`.
-        """
-        super().__init__(**kwargs)
+        super().__init__(**intake_kwargs)
 
         self._index = index
         self._host = host
-        self._es_kwargs = es_kwargs
-        self._search_kwargs = search_kwargs
-
-        if es_kwargs is None:
-            es_kwargs = {}
+        self._es_kwargs = es_kwargs or {}
+        self._xarray_kwargs = xarray_kwargs or {}
 
         if not skip_client:
-            self._client = elasticsearch.Elasticsearch(host, **es_kwargs)
+            self._client = elasticsearch.Elasticsearch(self._host, **self._es_kwargs)
 
         self._df = None
-        self._entries = {}
+        self._sort = [{"_doc": "asc"}]
 
     @property
-    def describe_index(self):
-        try:
-            return self._client.indices.get(index=self._index).body
-        except Exception:
-            raise ESCatalogError("Unable to query information about the index")
+    def df(self):
+        return self._df
+
+    @df.setter
+    def df(self, df):
+        self._df = df
+
+        # Remove entries
+        if self._df is not None:
+            keys = set(
+                [".".join(x.values[:-1].tolist()) for _, x in self._df.iterrows()]
+            )
+            for key in set(self._entries.keys()) - keys:
+                del self._entries[key]
 
     @property
     def fields(self):
-        try:
-            fields = {}
-            for x, y in self.describe_index[self._index]["mappings"][
-                "properties"
-            ].items():
-                try:
-                    fields[x] = list(y["fields"].keys())[0]
-                except KeyError:
-                    fields[x] = y["type"]
-            return fields
-        except Exception:
-            raise ESCatalogError("Unable to query field mapping for the index")
+        mapping = self._client.indices.get_mapping(index=self._index)
 
-    @property
+        return list(mapping[self._index]["mappings"]["properties"])
+
     def count(self):
-        result = self._client.count(index=self._index)
+        if self._df is None:
+            result = self._client.count(index=self._index, query={"match_all": {}})
 
-        return result["count"]
+            count = result["count"]
+        else:
+            count = len(self._df)
 
-    def field_top(self, field):
-        aggs = {"unique": {"terms": {"field": field}}}
+        return count
 
-        result = self._client.search(index=self._index, aggs=aggs, size=0)
+    def top(self, field):
+        aggs = {"top": {"terms": {"field": "variable_id"}}}
 
-        data = result["aggregations"]["unique"]["buckets"]
+        result = self._aggregation(aggs)
 
-        return {x["key"]: x["doc_count"] for x in data}
+        data = [[x["key"], x["doc_count"]] for x in result["top"]["buckets"]]
 
-    def field_nunique(self, field):
-        aggs = {
-            "unique": {
-                "composite": {"sources": {"values": {"terms": {"field": field}}}}
-            }
-        }
+        return pd.DataFrame(data, columns=[field, "count"])
 
-        result = self._client.search(index=self._index, aggs=aggs, size=0)
+    def search(self, **kwargs):
+        if self._df is None:
+            df = self._search_es(**kwargs)
+        else:
+            df = self._search_df(**kwargs)
 
-        data = result["aggregations"]["unique"]["buckets"]
-        after_key = result["aggregations"]["unique"]["after_key"]
+        cat = self(xarray_kwargs=self._xarray_kwargs, skip_client=True)
+
+        cat._df = df
+
+        cat._client = self._client
+
+        return cat
+
+    def __call__(self, xarray_kwargs=None, **kwargs):
+        if xarray_kwargs is not None:
+            xr_kwargs = self._xarray_kwargs.copy()
+            xr_kwargs.update(xarray_kwargs)
+
+            kwargs["xarray_kwargs"] = xr_kwargs
+
+        cat = super().__call__(**kwargs)
+
+        cat._df = self._df
+
+        cat._client = self._client
+
+        return cat
+
+    def _search_es(self, **kwargs):
+        query = self._build_es_query(**kwargs)
+
+        data, search_after = self._search(query)
 
         while True:
-            aggs["unique"]["composite"]["after"] = after_key
-            result = self._client.search(index=self._index, aggs=aggs, size=0)
-
-            new_data = result["aggregations"]["unique"]["buckets"]
-
-            if len(new_data) == 0:
+            try:
+                new_data, search_after = self._search(query, search_after=search_after)
+            except ESCatalogError:
                 break
 
             data += new_data
-            after_key = result["aggregations"]["unique"]["after_key"]
 
-        return {x["key"]["values"]: x["doc_count"] for x in data}
+        return pd.DataFrame([x["_source"] for x in data])
 
-    def search(self, dry_run=False, **kwargs):
-        """Search the Elasticsearch index.
-
-        The values of the search arguments can be a string or list. If a list
-        the each value must be present to match.
-
-        Args:
-            kwargs: Search arguments.
-
-        Examples:
-            >>> cat.search(activity_drs='ScenarioMIP', variable_id=['pr', 'tas'])
-        """
-        query = self._build_query(**kwargs)
-
-        logging.debug(f"Built query {query}")
-
-        if dry_run:
-            result = self._client.count(index=self._index, query=query)
-
-            logging.debug(f"Raw result {result}")
-
-            return result["count"]
-        else:
-            logging.debug(f"Using query {query}")
-
-            sort = [{"_doc": "asc"}]
-
-            result = self._client.search(
-                index=self._index, query=query, sort=sort, size=10000
-            )
-            data = result["hits"]["hits"]
-
-            try:
-                search_after = result["hits"]["hits"][-1]["sort"]
-            except IndexError:
-                raise ESCatalogError("No results found") from None
-
-            while True:
-                result = self._client.search(
-                    index=self._index,
-                    query=query,
-                    sort=sort,
-                    search_after=search_after,
-                    size=10000,
-                )
-
-                new_data = result["hits"]["hits"]
-
-                if len(new_data) == 0:
-                    break
-
-                search_after = new_data[-1]["sort"]
-
-                data += new_data
-
-            data = [x["_source"] for x in data]
-
-            df = pd.DataFrame(data)
-
-            cat = ElasticSearchCatalog(
-                self._index,
-                host=self._host,
-                es_kwargs=self._es_kwargs,
-                search_kwargs=self._search_kwargs,
-                skip_client=True,
-            )
-
-            cat._df = df
-
-            cat._entries = {
-                ".".join(x.values[:-1].tolist()): ESNetCDFSource(f'{x["path"]}/*.nc')
-                for _, x in df.iterrows()
-            }
-
-            return cat
-
-    def _build_query(self, **kwargs):
+    def _build_es_query(self, **kwargs):
         if len(kwargs) == 0:
-            warnings.warn(
-                "No search arguments, this may take awhile",
-                ResourceWarning,
-                stacklevel=2,
-            )
-
             query = {"match_all": {}}
         else:
-            if self._search_kwargs is None:
-                self._search_kwargs = kwargs
-            else:
-                self._search_kwargs.update(kwargs)
-
             must_terms = []
             filter_terms = []
             must_not_terms = []
 
-            for k, v in self._search_kwargs.items():
+            for k, v in kwargs.items():
                 if isinstance(v, (list, set)):
                     v = list(v)
 
@@ -247,33 +234,84 @@ class ElasticSearchCatalog(intake.Catalog):
                     else:
                         must_terms.append({"term": {k: v}})
 
-            query_bool = {}
-
-            if len(must_terms) > 0:
-                query_bool["must"] = must_terms
-
-            if len(filter_terms) > 0:
-                query_bool["filter"] = filter_terms
-
-            if len(must_not_terms) > 0:
-                query_bool["must_not"] = must_not_terms
-
-            query = {"bool": query_bool}
+            query = {
+                "bool": {
+                    "must": must_terms,
+                    "filter": filter_terms,
+                    "must_not": must_not_terms,
+                }
+            }
 
         return query
 
-    def keys(self):
+    def _search(self, query, **kwargs):
+        result = self._client.search(
+            index=self._index, query=query, sort=self._sort, size=10000, **kwargs
+        )
+
+        data = result["hits"]["hits"]
+
         try:
-            return [".".join(x.values[:-1].tolist()) for idx, x in self._df.iterrows()]
-        except AttributeError:
-            return []
+            search_after = data[-1]["sort"]
+        except IndexError:
+            raise NoResultError("No results found") from None
 
-    @property
-    def df(self):
-        return self._df
+        return data, search_after
 
-    def __len__(self):
-        return len(self._entries)
+    def _aggregation(self, aggs, **kwargs):
+        result = self._client.search(index=self._index, aggs=aggs, size=0, **kwargs)
+
+        return result["aggregations"]
+
+    def _search_df(self, **kwargs):
+        query = None
+
+        for k, v in kwargs.items():
+            if isinstance(v, (list, set)):
+                v = list(v)
+            else:
+                v = list([v])
+
+            term = None
+
+            for x in v:
+                try:
+                    if x.startswith("!"):
+                        y = self._df[k] != x[1:]
+                    else:
+                        y = self._df[k] == x
+                except AttributeError:
+                    raise ESCatalogError(
+                        f"Could not search values {v!r} in {k!r}"
+                    ) from None
+
+                if term is None:
+                    term = y
+                else:
+                    term |= y
+
+            if query is None:
+                query = term
+            else:
+                query &= term
+
+        return self._df[query].reset_index(drop=True)
+
+    @reload_on_change
+    def _get_entries(self):
+        if self._df is None:
+            return self._entries
+
+        self._entries = {
+            ".".join(x.values[:-1].tolist()): ESXarraySource(
+                f"{x['path']}/*.nc",
+                xarray_kwargs=self._xarray_kwargs,
+                storage_options=self.storage_options,
+            )
+            for _, x in self._df.iterrows()
+        }
+
+        return self._entries
 
     def __getitem__(self, key):
         return self._entries[key]
@@ -283,7 +321,7 @@ class ElasticSearchCatalog(intake.Catalog):
 
     def _repr_html_(self):
         if self._df is None:
-            return f"<p><strong>{self._index} catalog with {len(self)} datasets</strong></p>"
+            return f"<p><strong>{repr(self)}</strong></p>"
 
         return self._df._repr_html_()
 
@@ -296,62 +334,31 @@ class ElasticSearchCatalog(intake.Catalog):
         return list(self)
 
     def _close(self):
-        self._client.close()
+        if self._client:
+            self._client.close()
 
-        del self._client
+            del self._client
 
-        self._client = None
+            self._client = None
 
     def __del__(self):
         self._close()
 
-        super().__del__()
-
-    def unique(self):
-        try:
-            data = {x: self._df[x].unique().tolist() for x in self._df.columns[:-1]}
-        except AttributeError:
-            return {}
-
-        return data
-
-    def nunique(self):
-        try:
-            data = {x: self._df[x].nunique() for x in self._df.columns[:-1]}
-        except AttributeError:
-            return {}
-
-        return data
-
-    def to_dataset_dict(self, to_xcdat=False, **kwargs):
-        if len(self) > 20:
-            warnings.warn(
-                "Opening more than 20 datasets, this may take awhile",
-                ResourceWarning,
-                stacklevel=2,
-            )
-
-        if to_xcdat:
-            ds_dict = {x: self[x].to_xcdat(**kwargs) for x in list(self)}
+    def to_dataset_dict(self, xcdat=False):
+        if xcdat:
+            ds_dict = {x: self[x].to_xcdat() for x in list(self)}
         else:
-            ds_dict = {x: self[x].to_dask() for x in list(self)}
+            ds_dict = {x: self[x].to_xarray() for x in list(self)}
 
         return ds_dict
 
-    def to_datatree(self, **kwargs):
+    def to_datatree(self, xcdat=False):
         try:
             from datatree import DataTree
         except ImportError:
             raise Exception("Please install the xarray-datatree package")
 
-        if len(self) > 20:
-            warnings.warn(
-                "Opening more than 20 datasets, this may take awhile",
-                ResourceWarning,
-                stacklevel=2,
-            )
-
-        datasets = self.to_dataset_dict(**kwargs)
+        datasets = self.to_dataset_dict(xcdat=xcdat, **kwargs)
 
         datasets = {x.replace(".", "/"): y for x, y in datasets.items()}
 
