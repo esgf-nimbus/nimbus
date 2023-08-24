@@ -358,7 +358,7 @@ class ElasticSearchCatalog(Catalog):
         except ImportError:
             raise Exception("Please install the xarray-datatree package")
 
-        datasets = self.to_dataset_dict(xcdat=xcdat, **kwargs)
+        datasets = self.to_dataset_dict(xcdat=xcdat)
 
         datasets = {x.replace(".", "/"): y for x, y in datasets.items()}
 
