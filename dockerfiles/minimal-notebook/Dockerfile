@@ -46,8 +46,10 @@ RUN --mount=type=cache,target=/opt/conda/pkgs \
         xcdat \
         xarray \
         xarray-datatree \
-        netcdf4 \
         pandas \
+        xesmf \
+        xgcm \
+        netcdf4 \
         s3fs \
         zarr \
         intake \
@@ -55,6 +57,11 @@ RUN --mount=type=cache,target=/opt/conda/pkgs \
         intake-stac \
         intake-xarray \
         flox \
+        holoviews \
+        hvplot \
+        datashader \
+        seaborn \
+        cartopy \
         matplotlib \
         nc-time-axis \
         ipywidgets \
