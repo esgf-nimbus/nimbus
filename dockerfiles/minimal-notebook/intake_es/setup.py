@@ -14,6 +14,7 @@ setup(
     package_dir={"": "src"},
     include_package_data=True,
     entry_points={
+        "console_scripts": ["catalog-generator = intake_es.generator:main"],
         "intake.drivers": ["es_cat = intake_es.catalog:ElasticSearchCatalog"],
         "intake.catalogs": [
             "local = intake_es.catalog:cat",
