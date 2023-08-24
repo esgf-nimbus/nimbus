@@ -189,6 +189,8 @@ class ElasticSearchCatalog(Catalog):
 
         cat._df = self._df
 
+        cat._get_entries()
+
         cat._client = self._client
 
         return cat
