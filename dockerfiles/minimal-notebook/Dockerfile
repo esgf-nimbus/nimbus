@@ -57,6 +57,7 @@ RUN --mount=type=cache,target=/opt/conda/pkgs \
         intake-stac \
         intake-xarray \
         gsw-xarray \
+        geoviews \
         flox \
         holoviews \
         hvplot \

@@ -106,7 +106,10 @@ dependencies:
   - frozenlist=1.4.0=py310h2372a71_0
   - fsspec=2023.6.0=pyh1a96a4e_0
   - future=0.18.3=pyhd8ed1ab_0
+  - geopandas-base=0.13.2=pyha770c72_1
   - geos=3.12.0=h59595ed_0
+  - geoviews=1.9.6=pyhd8ed1ab_0
+  - geoviews-core=1.9.6=pyha770c72_0
   - gettext=0.21.1=h27087fc_0
   - gflags=2.2.2=he1b5a44_1004
   - glib=2.76.4=hfc55251_0
@@ -283,7 +286,7 @@ dependencies:
   - orc=1.9.0=h2f23424_1
   - packaging=23.1=pyhd8ed1ab_0
   - pamela=1.0.0=py_0
-  - pandas=2.0.3=py310h7cbd5c2_1
+  - pandas=2.1.0=py310hcc13569_0
   - pandoc=2.19.2=h32600fe_2
   - pandocfilters=1.5.0=pyhd8ed1ab_0
   - panel=0.14.4=pyhd8ed1ab_0
