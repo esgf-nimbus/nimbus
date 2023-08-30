@@ -120,7 +120,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           context: dockerfiles/${{ matrix.directories }}
-          build-args: ${{ (contains(matrix.directories, "minimal-notebook") || contains(matrix.directories, "nimbus")) && TAG=cache || "" }}
+          build-args: ${{ (contains(matrix.directories, 'minimal-notebook') || contains(matrix.directories, 'nimbus')) && TAG=cache || '' }}
           pull: true
           push: true
           tags: ghcr.io/esgf-nimbus/${{ matrix.directories }}:cache
