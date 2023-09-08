@@ -1,56 +1,55 @@
 # Changelog
-  - Updates syncing minimal-notebook and dask-gateway base conda environments [8e8f9ac](https://github.com/esgf-nimbus/nimbus/commit/8e8f9ac) (24 minutes ago)
-  - [intake_es] Fixes creating es client only during query and adds optional delayed opening datasets [fb65a6a](https://github.com/esgf-nimbus/nimbus/commit/fb65a6a) (79 minutes ago)
-  - Adds additional changelogs [a40ee73](https://github.com/esgf-nimbus/nimbus/commit/a40ee73) (2 hours ago)
-  - Adds geoviews [c618c64](https://github.com/esgf-nimbus/nimbus/commit/c618c64) (9 days ago)
-  - Adds gsw-xarray package [20ea6f0](https://github.com/esgf-nimbus/nimbus/commit/20ea6f0) (9 days ago)
-  - Updates build target to automatically export conda base environment [1c79ca8](https://github.com/esgf-nimbus/nimbus/commit/1c79ca8) (9 days ago)
-- Bump minimal-notebook to 0.1.15 [e60b730](https://github.com/esgf-nimbus/nimbus/commit/e60b730) (2 weeks ago)
-  - Replaces intro with changelog [ff56aef](https://github.com/esgf-nimbus/nimbus/commit/ff56aef) (2 weeks ago)
-  - Fixes getting entries after creating a new catalog [00c1cf8](https://github.com/esgf-nimbus/nimbus/commit/00c1cf8) (2 weeks ago)
-  - Removes unused kwargs [bd86a71](https://github.com/esgf-nimbus/nimbus/commit/bd86a71) (2 weeks ago)
-  - Adds xesmf, xgcm, holoviews, hvplot, datashader, seaborn, and cartopy [d940a0a](https://github.com/esgf-nimbus/nimbus/commit/d940a0a) (2 weeks ago)
-  - Adds xarray-datatree and nc-time-axis packages [180d2bc](https://github.com/esgf-nimbus/nimbus/commit/180d2bc) (2 weeks ago)
-  - Updates intake_es and adds catalog-generator [4fe26a9](https://github.com/esgf-nimbus/nimbus/commit/4fe26a9) (2 weeks ago)
-- Bump minimal-notebook to 0.1.14 [e4ff440](https://github.com/esgf-nimbus/nimbus/commit/e4ff440) (3 weeks ago)
-  - Udpates tbump and adds automation for version bumping [bbbded7](https://github.com/esgf-nimbus/nimbus/commit/bbbded7) (3 weeks ago)
-  - Updates tbump to bump version in dependent dockerfiles [e79c03f](https://github.com/esgf-nimbus/nimbus/commit/e79c03f) (3 weeks ago)
-- Revert "Bump to 0.1.14" [acd5437](https://github.com/esgf-nimbus/nimbus/commit/acd5437) (3 weeks ago)
-- Bump to 0.1.14 [d9694b0](https://github.com/esgf-nimbus/nimbus/commit/d9694b0) (3 weeks ago)
-  - Adds script to index directories for intake_es [124d649](https://github.com/esgf-nimbus/nimbus/commit/124d649) (3 weeks ago)
-  - Updates intake_es [6e8cb7c](https://github.com/esgf-nimbus/nimbus/commit/6e8cb7c) (3 weeks ago)
-- Bump to 0.1.13 [8877c11](https://github.com/esgf-nimbus/nimbus/commit/8877c11) (4 weeks ago)
-  - Fixes intake_es catalog [7bb9474](https://github.com/esgf-nimbus/nimbus/commit/7bb9474) (4 weeks ago)
-  - Fixes logging [af8059a](https://github.com/esgf-nimbus/nimbus/commit/af8059a) (4 weeks ago)
-- Bumps to 0.1.11 [b8afe93](https://github.com/esgf-nimbus/nimbus/commit/b8afe93) (4 weeks ago)
-  - Fixes intake_es and exports base env before intake_es [8945591](https://github.com/esgf-nimbus/nimbus/commit/8945591) (4 weeks ago)
-- Bump to 0.1.10 [49a0d50](https://github.com/esgf-nimbus/nimbus/commit/49a0d50) (4 weeks ago)
-  - Adds packages and removes dask-gateway env [0e8eba8](https://github.com/esgf-nimbus/nimbus/commit/0e8eba8) (4 weeks ago)
-  - Adds cmip5 catalog [4ef2859](https://github.com/esgf-nimbus/nimbus/commit/4ef2859) (4 weeks ago)
-  - Fixes es query [9d8d7d5](https://github.com/esgf-nimbus/nimbus/commit/9d8d7d5) (4 weeks ago)
-  - Adds intake_es documentation [1cb3c5f](https://github.com/esgf-nimbus/nimbus/commit/1cb3c5f) (4 weeks ago)
-- Bump to 0.1.9 [59618a5](https://github.com/esgf-nimbus/nimbus/commit/59618a5) (4 weeks ago)
-  - Updates minimal-notebook and adds intake_es package [254fcaa](https://github.com/esgf-nimbus/nimbus/commit/254fcaa) (4 weeks ago)
-- Bump to 0.1.8 [0724eb3](https://github.com/esgf-nimbus/nimbus/commit/0724eb3) (5 weeks ago)
-  - Adds dask-gateway and changelog [6b9fb7c](https://github.com/esgf-nimbus/nimbus/commit/6b9fb7c) (5 weeks ago)
-- Bump to 0.1.7 [032d3dd](https://github.com/esgf-nimbus/nimbus/commit/032d3dd) (6 weeks ago)
-  - Updates dockerfile [09a3ad7](https://github.com/esgf-nimbus/nimbus/commit/09a3ad7) (6 weeks ago)
-- Bump to 0.1.6 [5c27801](https://github.com/esgf-nimbus/nimbus/commit/5c27801) (7 weeks ago)
-  - Fixes installing kernelspec [d84252f](https://github.com/esgf-nimbus/nimbus/commit/d84252f) (7 weeks ago)
-- Bump to 0.1.5 [77effd1](https://github.com/esgf-nimbus/nimbus/commit/77effd1) (7 weeks ago)
-  - Updates tbump [97d3a03](https://github.com/esgf-nimbus/nimbus/commit/97d3a03) (7 weeks ago)
-  - Updates containers [da7fbe0](https://github.com/esgf-nimbus/nimbus/commit/da7fbe0) (7 weeks ago)
-- Bump to 0.1.4 [c6601e6](https://github.com/esgf-nimbus/nimbus/commit/c6601e6) (2 months ago)
-  - Removes version [d39bcf4](https://github.com/esgf-nimbus/nimbus/commit/d39bcf4) (2 months ago)
-  - Updates intro notebook [92ba446](https://github.com/esgf-nimbus/nimbus/commit/92ba446) (2 months ago)
-- Bump to 0.1.3 [1b0458e](https://github.com/esgf-nimbus/nimbus/commit/1b0458e) (2 months ago)
-  - Adds nbgitpuller [d2b9fc2](https://github.com/esgf-nimbus/nimbus/commit/d2b9fc2) (2 months ago)
-  - Updates makefiles [47c270f](https://github.com/esgf-nimbus/nimbus/commit/47c270f) (2 months ago)
-- Bump to 0.1.2 [9c3d7da](https://github.com/esgf-nimbus/nimbus/commit/9c3d7da) (4 months ago)
-  - Adds additional programs [0b5091d](https://github.com/esgf-nimbus/nimbus/commit/0b5091d) (4 months ago)
-  - Updates version environment variable [14a3c2b](https://github.com/esgf-nimbus/nimbus/commit/14a3c2b) (4 months ago)
-- Bump to 0.1.1 [f62eeaa](https://github.com/esgf-nimbus/nimbus/commit/f62eeaa) (4 months ago)
-  - Adds container versioning [b334c2b](https://github.com/esgf-nimbus/nimbus/commit/b334c2b) (4 months ago)
-  - Adds intro.ipynb [92562a3](https://github.com/esgf-nimbus/nimbus/commit/92562a3) (4 months ago)
-  - Adds minimal-notebook dockerfile [cc920c6](https://github.com/esgf-nimbus/nimbus/commit/cc920c6) (4 months ago)
+  - [intake_es] Fixes creating es client only during query and adds optional delayed opening datasets
+  - Adds additional changelogs
+  - Adds geoviews
+  - Adds gsw-xarray package
+  - Updates build target to automatically export conda base environment
+- Bump minimal-notebook to 0.1.15
+  - Replaces intro with changelog
+  - Fixes getting entries after creating a new catalog
+  - Removes unused kwargs
+  - Adds xesmf, xgcm, holoviews, hvplot, datashader, seaborn, and cartopy
+  - Adds xarray-datatree and nc-time-axis packages
+  - Updates intake_es and adds catalog-generator
+- Bump minimal-notebook to 0.1.14
+  - Udpates tbump and adds automation for version bumping
+  - Updates tbump to bump version in dependent dockerfiles
+- Revert "Bump to 0.1.14"
+- Bump to 0.1.14
+  - Adds script to index directories for intake_es
+  - Updates intake_es
+- Bump to 0.1.13
+  - Fixes intake_es catalog
+  - Fixes logging
+- Bumps to 0.1.11
+  - Fixes intake_es and exports base env before intake_es
+- Bump to 0.1.10
+  - Adds packages and removes dask-gateway env
+  - Adds cmip5 catalog
+  - Fixes es query
+  - Adds intake_es documentation
+- Bump to 0.1.9
+  - Updates minimal-notebook and adds intake_es package
+- Bump to 0.1.8
+  - Adds dask-gateway and changelog
+- Bump to 0.1.7
+  - Updates dockerfile
+- Bump to 0.1.6
+  - Fixes installing kernelspec
+- Bump to 0.1.5
+  - Updates tbump
+  - Updates containers
+- Bump to 0.1.4
+  - Removes version
+  - Updates intro notebook
+- Bump to 0.1.3
+  - Adds nbgitpuller
+  - Updates makefiles
+- Bump to 0.1.2
+  - Adds additional programs
+  - Updates version environment variable
+- Bump to 0.1.1
+  - Adds container versioning
+  - Adds intro.ipynb
+  - Adds minimal-notebook dockerfile
 
