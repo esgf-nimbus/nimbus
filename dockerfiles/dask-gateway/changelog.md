@@ -1,7 +1,9 @@
 # Changelog
-  - Updates changelog [b4bc978](https://github.com/esgf-nimbus/nimbus/commit/b4bc978) (19 minutes ago)
-  - Updates syncing minimal-notebook and dask-gateway base conda environments [8e8f9ac](https://github.com/esgf-nimbus/nimbus/commit/8e8f9ac) (24 minutes ago)
-  - Updates dask-gateway base env and add changelog [b1082fb](https://github.com/esgf-nimbus/nimbus/commit/b1082fb) (2 hours ago)
+  - Auto updates changelog [25306f0](https://github.com/esgf-nimbus/nimbus/commit/25306f0) (73 seconds ago)
+  - Updates changelog format [2df078d](https://github.com/esgf-nimbus/nimbus/commit/2df078d) (5 minutes ago)
+  - Updates changelog [b4bc978](https://github.com/esgf-nimbus/nimbus/commit/b4bc978) (25 minutes ago)
+  - Updates syncing minimal-notebook and dask-gateway base conda environments [8e8f9ac](https://github.com/esgf-nimbus/nimbus/commit/8e8f9ac) (30 minutes ago)
+  - Updates dask-gateway base env and add changelog [b1082fb](https://github.com/esgf-nimbus/nimbus/commit/b1082fb) (3 hours ago)
   - Adds geoviews [c618c64](https://github.com/esgf-nimbus/nimbus/commit/c618c64) (9 days ago)
   - Adds gsw-xarray package [20ea6f0](https://github.com/esgf-nimbus/nimbus/commit/20ea6f0) (9 days ago)
 - Bump dask-gateway to 0.1.2 [3e9e1eb](https://github.com/esgf-nimbus/nimbus/commit/3e9e1eb) (2 weeks ago)
