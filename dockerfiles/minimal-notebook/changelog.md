@@ -1,0 +1,53 @@
+# Changelog
+  - Adds geoviews
+  - Adds gsw-xarray package
+  - Updates build target to automatically export conda base environment
+- Bump minimal-notebook to 0.1.15
+  - Replaces intro with changelog
+  - Fixes getting entries after creating a new catalog
+  - Removes unused kwargs
+  - Adds xesmf, xgcm, holoviews, hvplot, datashader, seaborn, and cartopy
+  - Adds xarray-datatree and nc-time-axis packages
+  - Updates intake_es and adds catalog-generator
+- Bump minimal-notebook to 0.1.14
+  - Udpates tbump and adds automation for version bumping
+  - Updates tbump to bump version in dependent dockerfiles
+- Revert "Bump to 0.1.14"
+- Bump to 0.1.14
+  - Adds script to index directories for intake_es
+  - Updates intake_es
+- Bump to 0.1.13
+  - Fixes intake_es catalog
+  - Fixes logging
+- Bumps to 0.1.11
+  - Fixes intake_es and exports base env before intake_es
+- Bump to 0.1.10
+  - Adds packages and removes dask-gateway env
+  - Adds cmip5 catalog
+  - Fixes es query
+  - Adds intake_es documentation
+- Bump to 0.1.9
+  - Updates minimal-notebook and adds intake_es package
+- Bump to 0.1.8
+  - Adds dask-gateway and changelog
+- Bump to 0.1.7
+  - Updates dockerfile
+- Bump to 0.1.6
+  - Fixes installing kernelspec
+- Bump to 0.1.5
+  - Updates tbump
+  - Updates containers
+- Bump to 0.1.4
+  - Removes version
+  - Updates intro notebook
+- Bump to 0.1.3
+  - Adds nbgitpuller
+  - Updates makefiles
+- Bump to 0.1.2
+  - Adds additional programs
+  - Updates version environment variable
+- Bump to 0.1.1
+  - Adds container versioning
+  - Adds intro.ipynb
+  - Adds minimal-notebook dockerfile
+
