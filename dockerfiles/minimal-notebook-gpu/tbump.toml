@@ -16,3 +16,7 @@ tag_template = "v{new_version}"
 [[file]]
 src = "Makefile"
 search = "VERSION = {current_version}"
+
+[[after_push]]
+name = "Update changelog"
+cmd = "make changelog; git add changelog.md; git commit -m 'Updates changelog'; git push"

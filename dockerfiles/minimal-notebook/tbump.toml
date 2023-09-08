@@ -20,3 +20,7 @@ search = "VERSION = {current_version}"
 [[file]]
 src = "../minimal-notebook-gpu/Dockerfile"
 search = "TAG={current_version}"
+
+[[after_push]]
+name = "Update changelog"
+cmd = "make changelog; git add changelog.md; git commit -m 'Updates changelog'; git push"
