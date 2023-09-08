@@ -1,4 +1,4 @@
-ARG TAG=0.1.15
+ARG TAG=0.1.16
 FROM ghcr.io/esgf-nimbus/minimal-notebook:${TAG}
 
 USER root
