@@ -65,7 +65,6 @@ jobs:
         run: |
           pip install tbump
           pushd dockerfiles/minimal-notebook
-          make changelog
           echo "version=$(tbump current-version)" >> $GITHUB_OUTPUT
       - uses: docker/build-push-action@v4
         if: github.event_name == 'pull_request'
@@ -112,7 +111,6 @@ jobs:
         run: |
           pip install tbump
           pushd dockerfiles/${{ matrix.directories }}
-          make changelog
           echo "version=$(tbump current-version)" >> $GITHUB_OUTPUT
       - uses: docker/build-push-action@v4
         if: github.event_name == 'pull_request'
@@ -120,6 +118,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           context: dockerfiles/${{ matrix.directories }}
+          build-args: ${{ (contains(matrix.directories, 'minimal-notebook') || contains(matrix.directories, 'nimbus')) && 'TAG=cache' || '' }}
           pull: true
           push: true
           tags: ghcr.io/esgf-nimbus/${{ matrix.directories }}:cache

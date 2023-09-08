@@ -1,12 +1,13 @@
-ARG TAG=0.1.15
+ARG TAG=0.1.16
 FROM ghcr.io/esgf-nimbus/minimal-notebook:${TAG}
 
 USER root
 
+COPY base.yaml /base.yaml
+
 RUN --mount=type=cache,target=/opt/conda/pkgs \
-	mamba install -y \
-	rapids \
-	cupy && \
+	mamba env update -n base -f /base.yaml && \
+	rm /base.yaml && \
 	chown -R ${NB_UID}:${NB_GID} /home/jovyan
 
 COPY changelog.md /changelog.md

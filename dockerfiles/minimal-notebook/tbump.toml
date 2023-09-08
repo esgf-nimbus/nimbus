@@ -1,5 +1,5 @@
 [version]
-current = "0.1.15"
+current = "0.1.16"
 
 regex = '''
   (?P<major>\d+)
@@ -20,3 +20,7 @@ search = "VERSION = {current_version}"
 [[file]]
 src = "../minimal-notebook-gpu/Dockerfile"
 search = "TAG={current_version}"
+
+[[after_push]]
+name = "Update changelog"
+cmd = "make changelog; git add changelog.md; git commit -m 'Updates changelog'; git push"

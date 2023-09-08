@@ -6,8 +6,10 @@ import logging
 import pandas as pd
 import xcdat
 import xarray as xr
+from dask.delayed import delayed as delayed_func
 from intake.catalog.base import Catalog
 from intake.catalog.utils import reload_on_change
+from intake.catalog.local import LocalCatalogEntry
 from intake.source.base import DataSourceBase, Schema
 
 logger = logging.getLogger("intake_es")
@@ -40,17 +42,25 @@ class ESXarraySource(DataSourceBase):
         self._ds = None
         self._schema = None
 
+    def _open_dataset(self, use_xcdat=False, delayed=False):
+        url = fsspec.open_local(self._urlpath, **self._storage_options)
+
+        xr_kwargs = self._xarray_kwargs.copy()
+        use_xcdat = xr_kwargs.pop("xcdat", use_xcdat)
+
+        if use_xcdat:
+            open_func = xcdat.open_mfdataset
+        else:
+            open_func = xr.open_mfdataset
+
+        if delayed:
+            open_func = delayed_func(open_func)
+
+        return open_func(self._urlpath, **xr_kwargs)
+
     def _get_schema(self):
         if self._ds is None:
-            url = fsspec.open_local(self._urlpath, **self._storage_options)
-
-            xr_kwargs = self._xarray_kwargs.copy()
-            use_xcdat = xr_kwargs.pop("xcdat", False)
-
-            if use_xcdat:
-                self._ds = xcdat.open_mfdataset(url, **xr_kwargs)
-            else:
-                self._ds = xr.open_mfdataset(url, **xr_kwargs)
+            self._ds = self._open_dataset()
 
             metadata = {
                 "dims": dict(self._ds.dims),
@@ -83,10 +93,16 @@ class ESXarraySource(DataSourceBase):
     def to_dask(self):
         return self.read_chunked()
 
-    def to_xarray(self):
+    def to_xarray(self, delayed=False):
+        if delayed:
+            return self._open_dataset(delayed=True)
+
         return self.read_chunked()
 
-    def to_xcdat(self):
+    def to_xcdat(self, delayed=False):
+        if delayed:
+            return self._open_dataset(use_xcdat=True, delayed=True)
+
         self._xarray_kwargs["xcdat"] = True
         return self.read_chunked()
 
@@ -107,7 +123,6 @@ class ElasticSearchCatalog(Catalog):
         host=None,
         es_kwargs=None,
         xarray_kwargs=None,
-        skip_client=False,
         **intake_kwargs,
     ):
         super().__init__(**intake_kwargs)
@@ -117,11 +132,16 @@ class ElasticSearchCatalog(Catalog):
         self._es_kwargs = es_kwargs or {}
         self._xarray_kwargs = xarray_kwargs or {}
 
-        if not skip_client:
-            self._client = elasticsearch.Elasticsearch(self._host, **self._es_kwargs)
-
         self._df = None
         self._sort = [{"_doc": "asc"}]
+
+    def __enter__(self):
+        self._client = elasticsearch.Elasticsearch(self._host, **self._es_kwargs)
+        return self._client
+
+    def __exit__(self, exc_type, exc_value, exc_traceback):
+        self._client.close()
+        self._client = None
 
     @property
     def df(self):
@@ -131,23 +151,19 @@ class ElasticSearchCatalog(Catalog):
     def df(self, df):
         self._df = df
 
-        # Remove entries
-        if self._df is not None:
-            keys = set(
-                [".".join(x.values[:-1].tolist()) for _, x in self._df.iterrows()]
-            )
-            for key in set(self._entries.keys()) - keys:
-                del self._entries[key]
+        self._entries = self._get_entries()
 
     @property
     def fields(self):
-        mapping = self._client.indices.get_mapping(index=self._index)
+        with self as client:
+            mapping = client.indices.get_mapping(index=self._index)
 
         return list(mapping[self._index]["mappings"]["properties"])
 
     def count(self):
         if self._df is None:
-            result = self._client.count(index=self._index, query={"match_all": {}})
+            with self as client:
+                result = client.count(index=self._index, query={"match_all": {}})
 
             count = result["count"]
         else:
@@ -170,11 +186,9 @@ class ElasticSearchCatalog(Catalog):
         else:
             df = self._search_df(**kwargs)
 
-        cat = self(xarray_kwargs=self._xarray_kwargs, skip_client=True)
+        cat = self(xarray_kwargs=self._xarray_kwargs)
 
-        cat._df = df
-
-        cat._client = self._client
+        cat.df = df
 
         return cat
 
@@ -187,26 +201,25 @@ class ElasticSearchCatalog(Catalog):
 
         cat = super().__call__(**kwargs)
 
-        cat._df = self._df
-
-        cat._get_entries()
-
-        cat._client = self._client
+        cat.df = self._df
 
         return cat
 
     def _search_es(self, **kwargs):
         query = self._build_es_query(**kwargs)
 
-        data, search_after = self._search(query)
+        with self as client:
+            data, search_after = self._search(client, query)
 
-        while True:
-            try:
-                new_data, search_after = self._search(query, search_after=search_after)
-            except ESCatalogError:
-                break
+            while True:
+                try:
+                    new_data, search_after = self._search(
+                        client, query, search_after=search_after
+                    )
+                except ESCatalogError:
+                    break
 
-            data += new_data
+                data += new_data
 
         return pd.DataFrame([x["_source"] for x in data])
 
@@ -246,8 +259,8 @@ class ElasticSearchCatalog(Catalog):
 
         return query
 
-    def _search(self, query, **kwargs):
-        result = self._client.search(
+    def _search(self, client, query, **kwargs):
+        result = client.search(
             index=self._index, query=query, sort=self._sort, size=10000, **kwargs
         )
 
@@ -261,7 +274,8 @@ class ElasticSearchCatalog(Catalog):
         return data, search_after
 
     def _aggregation(self, aggs, **kwargs):
-        result = self._client.search(index=self._index, aggs=aggs, size=0, **kwargs)
+        with self as client:
+            result = client.search(index=self._index, aggs=aggs, size=0, **kwargs)
 
         return result["aggregations"]
 
@@ -305,10 +319,14 @@ class ElasticSearchCatalog(Catalog):
             return self._entries
 
         self._entries = {
-            ".".join(x.values[:-1].tolist()): ESXarraySource(
-                f"{x['path']}/*.nc",
-                xarray_kwargs=self._xarray_kwargs,
-                storage_options=self.storage_options,
+            ".".join(x.values[:-1].tolist()): LocalCatalogEntry(
+                name=".".join(x.values[:-1].tolist()),
+                description="",
+                driver="intake_es.catalog.ESXarraySource",
+                args={
+                    "urlpath": f"{x['path']}/*.nc",
+                    "xarray_kwargs": self._xarray_kwargs,
+                },
             )
             for _, x in self._df.iterrows()
         }
@@ -335,32 +353,21 @@ class ElasticSearchCatalog(Catalog):
     def _ipython_key_completions_(self):
         return list(self)
 
-    def _close(self):
-        if self._client:
-            self._client.close()
-
-            del self._client
-
-            self._client = None
-
-    def __del__(self):
-        self._close()
-
-    def to_dataset_dict(self, xcdat=False):
+    def to_dataset_dict(self, xcdat=False, delayed=False):
         if xcdat:
-            ds_dict = {x: self[x].to_xcdat() for x in list(self)}
+            ds_dict = {x: self[x]().to_xcdat(delayed=delayed) for x in list(self)}
         else:
-            ds_dict = {x: self[x].to_xarray() for x in list(self)}
+            ds_dict = {x: self[x]().to_xarray(delayed=delayed) for x in list(self)}
 
         return ds_dict
 
-    def to_datatree(self, xcdat=False):
+    def to_datatree(self, xcdat=False, delayed=False):
         try:
             from datatree import DataTree
         except ImportError:
             raise Exception("Please install the xarray-datatree package")
 
-        datasets = self.to_dataset_dict(xcdat=xcdat)
+        datasets = self.to_dataset_dict(xcdat=xcdat, delayed=delayed)
 
         datasets = {x.replace(".", "/"): y for x, y in datasets.items()}
 
