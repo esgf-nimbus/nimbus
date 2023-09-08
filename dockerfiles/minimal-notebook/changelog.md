@@ -1,4 +1,6 @@
 # Changelog
+  - [intake_es] Fixes creating es client only during query and adds optional delayed opening datasets
+  - Adds additional changelogs
   - Adds geoviews
   - Adds gsw-xarray package
   - Updates build target to automatically export conda base environment

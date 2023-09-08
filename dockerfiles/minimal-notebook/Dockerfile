@@ -41,35 +41,13 @@ RUN groupadd -g 1026 climate && \
     pip install nbgitpuller && \
     mkdir /notebooks
 
+COPY base.yaml /base.yaml
+
 RUN --mount=type=cache,target=/opt/conda/pkgs \
-    mamba install -y \
-        xcdat \
-        xarray \
-        xarray-datatree \
-        pandas \
-        xesmf \
-        xgcm \
-        netcdf4 \
-        s3fs \
-        zarr \
-        intake \
-        intake-esm \
-        intake-stac \
-        intake-xarray \
-        gsw-xarray \
-        geoviews \
-        flox \
-        holoviews \
-        hvplot \
-        datashader \
-        seaborn \
-        cartopy \
-        matplotlib \
-        nc-time-axis \
-        ipywidgets \
-        dask-gateway \
-        'bokeh<3' && \
-    conda env export -n base -f /base.yaml
+    mamba env update -n base -f /base.yaml && \
+    rm /base.yaml && \
+    pip install ecoport && \
+    python -m ecoport -f /base.yaml
 
 COPY --from=intake-es-builder /intake_es/dist /build
 
@@ -83,3 +61,5 @@ COPY changelog.md /changelog.md
 RUN source /scripts/render-intro.sh
 
 USER $NB_USER
+
+ENTRYPOINT ["/scripts/entrypoint.sh"]
