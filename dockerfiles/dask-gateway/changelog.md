@@ -1,18 +1,19 @@
 # Changelog
-  - Updates syncing minimal-notebook and dask-gateway base conda environments
-  - Updates dask-gateway base env and add changelog
-  - Adds geoviews
-  - Adds gsw-xarray package
-- Bump dask-gateway to 0.1.2
-  - Updates dask-gateway env
-  - Udpates tbump and adds automation for version bumping
-- Bumps to 0.1.1
-  - Adds base.yaml to sync packages with minimal-notebook
-  - Fixes exporting correct environment
-  - Adds env-export
-  - Updates makefile
-  - Updates tbump
-  - Updates containers
-  - Updates makefiles
-  - Adds dask-gateway image
+  - Updates changelog [b4bc978](https://github.com/esgf-nimbus/nimbus/commit/b4bc978) (19 minutes ago)
+  - Updates syncing minimal-notebook and dask-gateway base conda environments [8e8f9ac](https://github.com/esgf-nimbus/nimbus/commit/8e8f9ac) (24 minutes ago)
+  - Updates dask-gateway base env and add changelog [b1082fb](https://github.com/esgf-nimbus/nimbus/commit/b1082fb) (2 hours ago)
+  - Adds geoviews [c618c64](https://github.com/esgf-nimbus/nimbus/commit/c618c64) (9 days ago)
+  - Adds gsw-xarray package [20ea6f0](https://github.com/esgf-nimbus/nimbus/commit/20ea6f0) (9 days ago)
+- Bump dask-gateway to 0.1.2 [3e9e1eb](https://github.com/esgf-nimbus/nimbus/commit/3e9e1eb) (2 weeks ago)
+  - Updates dask-gateway env [7c554ff](https://github.com/esgf-nimbus/nimbus/commit/7c554ff) (2 weeks ago)
+  - Udpates tbump and adds automation for version bumping [bbbded7](https://github.com/esgf-nimbus/nimbus/commit/bbbded7) (3 weeks ago)
+- Bumps to 0.1.1 [6a734b1](https://github.com/esgf-nimbus/nimbus/commit/6a734b1) (4 weeks ago)
+  - Adds base.yaml to sync packages with minimal-notebook [2083bd1](https://github.com/esgf-nimbus/nimbus/commit/2083bd1) (4 weeks ago)
+  - Fixes exporting correct environment [8d1c15a](https://github.com/esgf-nimbus/nimbus/commit/8d1c15a) (5 weeks ago)
+  - Adds env-export [8660cc6](https://github.com/esgf-nimbus/nimbus/commit/8660cc6) (6 weeks ago)
+  - Updates makefile [0b52bb9](https://github.com/esgf-nimbus/nimbus/commit/0b52bb9) (6 weeks ago)
+  - Updates tbump [97d3a03](https://github.com/esgf-nimbus/nimbus/commit/97d3a03) (7 weeks ago)
+  - Updates containers [da7fbe0](https://github.com/esgf-nimbus/nimbus/commit/da7fbe0) (7 weeks ago)
+  - Updates makefiles [47c270f](https://github.com/esgf-nimbus/nimbus/commit/47c270f) (2 months ago)
+  - Adds dask-gateway image [a5d0d86](https://github.com/esgf-nimbus/nimbus/commit/a5d0d86) (4 months ago)
 
