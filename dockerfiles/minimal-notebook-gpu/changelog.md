@@ -1,13 +1,16 @@
 # Changelog
-  - Adds additional changelogs
-- Bump minimal-notebook-gpu to 0.1.3
-- Bump minimal-notebook to 0.1.15
-  - Removes build-arg
-- Bump minimal-notebook-gpu to 0.1.2
-- Bump minimal-notebook to 0.1.14
-  - Udpates tbump and adds automation for version bumping
-  - Adds default TAG value
-- Bump to 0.1.1
-  - Adds changelog
-  - Adds initial container
+  - Revert "Updates changelog format" [f66c55a](https://github.com/esgf-nimbus/nimbus/commit/f66c55a) (2 minutes ago)
+  - Updates changelog format [2df078d](https://github.com/esgf-nimbus/nimbus/commit/2df078d) (8 minutes ago)
+  - Updates conda environment [1601b21](https://github.com/esgf-nimbus/nimbus/commit/1601b21) (24 minutes ago)
+  - Adds additional changelogs [a40ee73](https://github.com/esgf-nimbus/nimbus/commit/a40ee73) (3 hours ago)
+- Bump minimal-notebook-gpu to 0.1.3 [549a471](https://github.com/esgf-nimbus/nimbus/commit/549a471) (2 weeks ago)
+- Bump minimal-notebook to 0.1.15 [e60b730](https://github.com/esgf-nimbus/nimbus/commit/e60b730) (2 weeks ago)
+  - Removes build-arg [3aa08f2](https://github.com/esgf-nimbus/nimbus/commit/3aa08f2) (3 weeks ago)
+- Bump minimal-notebook-gpu to 0.1.2 [7a41cbf](https://github.com/esgf-nimbus/nimbus/commit/7a41cbf) (3 weeks ago)
+- Bump minimal-notebook to 0.1.14 [e4ff440](https://github.com/esgf-nimbus/nimbus/commit/e4ff440) (3 weeks ago)
+  - Udpates tbump and adds automation for version bumping [bbbded7](https://github.com/esgf-nimbus/nimbus/commit/bbbded7) (3 weeks ago)
+  - Adds default TAG value [1e20a16](https://github.com/esgf-nimbus/nimbus/commit/1e20a16) (3 weeks ago)
+- Bump to 0.1.1 [62433c8](https://github.com/esgf-nimbus/nimbus/commit/62433c8) (5 weeks ago)
+  - Adds changelog [e7afb58](https://github.com/esgf-nimbus/nimbus/commit/e7afb58) (5 weeks ago)
+  - Adds initial container [2ef8f94](https://github.com/esgf-nimbus/nimbus/commit/2ef8f94) (6 weeks ago)
 
