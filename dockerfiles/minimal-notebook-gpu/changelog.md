@@ -1,7 +1,8 @@
 # Changelog
-  - Revert "Updates changelog format" [f66c55a](https://github.com/esgf-nimbus/nimbus/commit/f66c55a) (2 minutes ago)
-  - Updates changelog format [2df078d](https://github.com/esgf-nimbus/nimbus/commit/2df078d) (8 minutes ago)
-  - Updates conda environment [1601b21](https://github.com/esgf-nimbus/nimbus/commit/1601b21) (24 minutes ago)
+  - Updates changelog format [8e024bb](https://github.com/esgf-nimbus/nimbus/commit/8e024bb) (3 minutes ago)
+  - Revert "Updates changelog format" [f66c55a](https://github.com/esgf-nimbus/nimbus/commit/f66c55a) (5 minutes ago)
+  - Updates changelog format [2df078d](https://github.com/esgf-nimbus/nimbus/commit/2df078d) (11 minutes ago)
+  - Updates conda environment [1601b21](https://github.com/esgf-nimbus/nimbus/commit/1601b21) (27 minutes ago)
   - Adds additional changelogs [a40ee73](https://github.com/esgf-nimbus/nimbus/commit/a40ee73) (3 hours ago)
 - Bump minimal-notebook-gpu to 0.1.3 [549a471](https://github.com/esgf-nimbus/nimbus/commit/549a471) (2 weeks ago)
 - Bump minimal-notebook to 0.1.15 [e60b730](https://github.com/esgf-nimbus/nimbus/commit/e60b730) (2 weeks ago)
