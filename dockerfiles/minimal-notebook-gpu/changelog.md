@@ -1,4 +1,7 @@
 # Changelog
+- Bump minimal-notebook-gpu to 0.1.4 [c5357bc](https://github.com/esgf-nimbus/nimbus/commit/c5357bc) (2023-09-08)
+- Bump minimal-notebook to 0.1.16 [f17e53c](https://github.com/esgf-nimbus/nimbus/commit/f17e53c) (2023-09-08)
+  - Changes changelog date from relative to short [b95eae3](https://github.com/esgf-nimbus/nimbus/commit/b95eae3) (2023-09-08)
   - [tbump] Adds after_push handler [f726255](https://github.com/esgf-nimbus/nimbus/commit/f726255) (2023-09-08)
   - Fixes changelog Bump headers [5e9c326](https://github.com/esgf-nimbus/nimbus/commit/5e9c326) (2023-09-08)
   - Updates changelog format [8e024bb](https://github.com/esgf-nimbus/nimbus/commit/8e024bb) (2023-09-08)
