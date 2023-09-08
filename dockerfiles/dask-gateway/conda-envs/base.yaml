@@ -86,7 +86,7 @@ dependencies:
   - distributed=2023.8.1=pyhd8ed1ab_0
   - entrypoints=0.4=pyhd8ed1ab_0
   - esmf=8.4.2=mpi_mpich_h8fb3fe9_102
-  - esmpy=8.4.2=pyhc1e730c_2
+  - esmpy=8.4.2=pyhc1e730c_4
   - executing=1.2.0=pyhd8ed1ab_0
   - expat=2.5.0=hcb278e6_1
   - fasteners=0.17.3=pyhd8ed1ab_0
@@ -216,7 +216,7 @@ dependencies:
   - libpnetcdf=1.12.3=mpi_mpich_h4ac58e2_101
   - libpng=1.6.39=h753d276_0
   - libpq=15.3=hbcd7760_1
-  - libprotobuf=3.21.12=hfc55251_1
+  - libprotobuf=3.21.12=hfc55251_2
   - libsndfile=1.2.2=hbc2eb40_0
   - libsodium=1.0.18=h36c2ea0_1
   - libsolv=0.7.23=h3eb15da_0
