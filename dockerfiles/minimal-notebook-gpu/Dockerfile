@@ -1,5 +1,6 @@
 ARG TAG=0.1.16
-FROM ghcr.io/esgf-nimbus/minimal-notebook:${TAG}
+ARG IMAGE=ghcr.io/esgf-nimbus/minimal-notebook
+FROM ${IMAGE}:${TAG}
 
 USER root
 

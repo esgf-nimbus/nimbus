@@ -1,5 +1,6 @@
 ARG TAG=23.1.0-4
-FROM condaforge/mambaforge:${TAG}
+ARG IMAGE=condaforge/mambaforge
+FROM ${IMAGE}:${TAG}
 
 LABEL org.opencontainers.image.source="https://github.com/esgf-nimbus/nimbus"
 LABEL org.opencontainers.image.url="https://github.com/esgf-nimbus/nimbus/blob/main/dockerfiles/dask-gateway/Dockerfile"
