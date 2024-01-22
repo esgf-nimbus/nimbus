@@ -1,4 +1,9 @@
 # Changelog
+  - Fixes hook to update changelog [0b1c626](https://github.com/esgf-nimbus/nimbus/commit/0b1c626) (2024-01-22)
+  - Removes push after bump [6ec59dc](https://github.com/esgf-nimbus/nimbus/commit/6ec59dc) (2024-01-22)
+  - Adds pcmdi_metrics package [6696776](https://github.com/esgf-nimbus/nimbus/commit/6696776) (2024-01-22)
+  - Adds image argument [edf58c3](https://github.com/esgf-nimbus/nimbus/commit/edf58c3) (2023-11-20)
+  - Changes changelog date from relative to short [b95eae3](https://github.com/esgf-nimbus/nimbus/commit/b95eae3) (2023-09-08)
   - Updates changelog [3d66b9b](https://github.com/esgf-nimbus/nimbus/commit/3d66b9b) (2023-09-08)
 - Bump dask-gateway to 0.1.3 [88cce5b](https://github.com/esgf-nimbus/nimbus/commit/88cce5b) (2023-09-08)
   - [tbump] Adds after_push handler [f726255](https://github.com/esgf-nimbus/nimbus/commit/f726255) (2023-09-08)
