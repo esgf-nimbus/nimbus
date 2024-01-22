@@ -23,4 +23,4 @@ search = "TAG={current_version}"
 
 [[after_push]]
 name = "Update changelog"
-cmd = "make changelog; git add changelog.md; git commit -m 'Updates changelog'; git push"
+cmd = "make changelog; git add changelog.md; git commit -m 'Updates changelog'"
