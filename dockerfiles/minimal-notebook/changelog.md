@@ -1,4 +1,6 @@
 # Changelog
+  - Fixes url [ef95fcb](https://github.com/esgf-nimbus/nimbus/commit/ef95fcb) (2024-01-22)
+  - Updates changelog [7ae4ce5](https://github.com/esgf-nimbus/nimbus/commit/7ae4ce5) (2023-09-08)
 - Bump minimal-notebook to 0.1.16 [f17e53c](https://github.com/esgf-nimbus/nimbus/commit/f17e53c) (2023-09-08)
   - Changes changelog date from relative to short [b95eae3](https://github.com/esgf-nimbus/nimbus/commit/b95eae3) (2023-09-08)
   - [tbump] Adds after_push handler [f726255](https://github.com/esgf-nimbus/nimbus/commit/f726255) (2023-09-08)

@@ -2,6 +2,7 @@ name: base
 channels:
   - conda-forge
 dependencies:
+  - pcmdi_metrics
   - xcdat
   - xarray
   - xarray-datatree
