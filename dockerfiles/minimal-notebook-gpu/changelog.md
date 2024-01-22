@@ -1,4 +1,6 @@
 # Changelog
+  - Removes push [eae5d88](https://github.com/esgf-nimbus/nimbus/commit/eae5d88) (2024-01-22)
+  - Updates changelog [979951b](https://github.com/esgf-nimbus/nimbus/commit/979951b) (2024-01-22)
   - Fixes hook to update changelog [0b1c626](https://github.com/esgf-nimbus/nimbus/commit/0b1c626) (2024-01-22)
 - Bump minimal-notebook to 0.1.17 [f08468c](https://github.com/esgf-nimbus/nimbus/commit/f08468c) (2024-01-22)
   - Revert "Bump minimal-notebook to 0.1.17" [7bd85e3](https://github.com/esgf-nimbus/nimbus/commit/7bd85e3) (2024-01-22)
