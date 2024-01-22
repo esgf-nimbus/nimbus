@@ -9,7 +9,7 @@
     "\n",
     "Welcome to the Nimbus compute cluster.\n",
     "\n",
-    "# [Getting Started](https://nimbus6.llnl.gov/hub/user-redirect/git-pull?repo=https%3A%2F%2Fgithub.com%2Fesgf-nimbus%2Fnimbus-cookbook&urlpath=lab%2Ftree%2Fnimbus-cookbook%2Fnotebooks%2Fintro.ipynb)"
+    "# [Getting Started](https://nimbus.llnl.gov/hub/user-redirect/git-pull?repo=https%3A%2F%2Fgithub.com%2Fesgf-nimbus%2Fnimbus-cookbook&urlpath=lab%2Ftree%2Fnimbus-cookbook%2Fnotebooks%2Fintro.ipynb)"
    ]
   },
   {
