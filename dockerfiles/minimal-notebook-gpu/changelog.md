@@ -1,4 +1,10 @@
 # Changelog
+  - Fixes hook to update changelog [0b1c626](https://github.com/esgf-nimbus/nimbus/commit/0b1c626) (2024-01-22)
+- Bump minimal-notebook to 0.1.17 [f08468c](https://github.com/esgf-nimbus/nimbus/commit/f08468c) (2024-01-22)
+  - Revert "Bump minimal-notebook to 0.1.17" [7bd85e3](https://github.com/esgf-nimbus/nimbus/commit/7bd85e3) (2024-01-22)
+- Bump minimal-notebook to 0.1.17 [db0c7fd](https://github.com/esgf-nimbus/nimbus/commit/db0c7fd) (2024-01-22)
+  - Adds image argument [edf58c3](https://github.com/esgf-nimbus/nimbus/commit/edf58c3) (2023-11-20)
+  - Updates changelog [d91418f](https://github.com/esgf-nimbus/nimbus/commit/d91418f) (2023-09-08)
 - Bump minimal-notebook-gpu to 0.1.4 [c5357bc](https://github.com/esgf-nimbus/nimbus/commit/c5357bc) (2023-09-08)
 - Bump minimal-notebook to 0.1.16 [f17e53c](https://github.com/esgf-nimbus/nimbus/commit/f17e53c) (2023-09-08)
   - Changes changelog date from relative to short [b95eae3](https://github.com/esgf-nimbus/nimbus/commit/b95eae3) (2023-09-08)
