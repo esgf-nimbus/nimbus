@@ -19,3 +19,9 @@ changelog:
 
 bump-%:
 	tbump $(if $(COMMIT),,--dry-run) --no-tag --no-push $(shell pysemver bump $* $(shell tbump current-version))
+
+ifdef $(COMMIT)
+	make changelog && \
+		git add changelog.md && \
+		git commit -m "Updates changelog"
+endif
