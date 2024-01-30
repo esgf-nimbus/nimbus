@@ -1,4 +1,8 @@
 # Changelog
+- Bump dask-gateway to 0.1.5 [ab73505](https://github.com/esgf-nimbus/nimbus/commit/ab73505) (2024-01-30)
+  - Removes before_commit hook [5e7bcc8](https://github.com/esgf-nimbus/nimbus/commit/5e7bcc8) (2024-01-30)
+- Bump dask-gateway to 0.1.4 [080a3fd](https://github.com/esgf-nimbus/nimbus/commit/080a3fd) (2024-01-22)
+  - Updates changelog [c65bb67](https://github.com/esgf-nimbus/nimbus/commit/c65bb67) (2024-01-22)
   - Fixes hook to update changelog [0b1c626](https://github.com/esgf-nimbus/nimbus/commit/0b1c626) (2024-01-22)
   - Removes push after bump [6ec59dc](https://github.com/esgf-nimbus/nimbus/commit/6ec59dc) (2024-01-22)
   - Adds pcmdi_metrics package [6696776](https://github.com/esgf-nimbus/nimbus/commit/6696776) (2024-01-22)
