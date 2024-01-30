@@ -1,4 +1,12 @@
 # Changelog
+  - Fixes exporting environment after minimal-notebook build [320492f](https://github.com/esgf-nimbus/nimbus/commit/320492f) (2024-01-30)
+  - Removes before_commit hook [5e7bcc8](https://github.com/esgf-nimbus/nimbus/commit/5e7bcc8) (2024-01-30)
+  - Fixes hook to update changelog [0b1c626](https://github.com/esgf-nimbus/nimbus/commit/0b1c626) (2024-01-22)
+- Bump minimal-notebook to 0.1.17 [f08468c](https://github.com/esgf-nimbus/nimbus/commit/f08468c) (2024-01-22)
+  - Revert "Bump minimal-notebook to 0.1.17" [7bd85e3](https://github.com/esgf-nimbus/nimbus/commit/7bd85e3) (2024-01-22)
+- Bump minimal-notebook to 0.1.17 [db0c7fd](https://github.com/esgf-nimbus/nimbus/commit/db0c7fd) (2024-01-22)
+  - Removes push after bump [6ec59dc](https://github.com/esgf-nimbus/nimbus/commit/6ec59dc) (2024-01-22)
+  - Adds pcmdi_metrics package [6696776](https://github.com/esgf-nimbus/nimbus/commit/6696776) (2024-01-22)
   - Fixes url [ef95fcb](https://github.com/esgf-nimbus/nimbus/commit/ef95fcb) (2024-01-22)
   - Updates changelog [7ae4ce5](https://github.com/esgf-nimbus/nimbus/commit/7ae4ce5) (2023-09-08)
 - Bump minimal-notebook to 0.1.16 [f17e53c](https://github.com/esgf-nimbus/nimbus/commit/f17e53c) (2023-09-08)

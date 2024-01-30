@@ -35,7 +35,9 @@ RUN groupadd -g 1026 climate && \
         htop \
         iputils-ping \
         dnsutils \
+        texlive-full \
         && \
+    apt-get purge && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \
     pip install nbgitpuller && \

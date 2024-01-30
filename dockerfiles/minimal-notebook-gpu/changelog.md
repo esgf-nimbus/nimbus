@@ -1,4 +1,9 @@
 # Changelog
+- Bump minimal-notebook-gpu to 0.1.6 [b68b51a](https://github.com/esgf-nimbus/nimbus/commit/b68b51a) (2024-01-30)
+- Bump minimal-notebook to 0.1.18 [d262229](https://github.com/esgf-nimbus/nimbus/commit/d262229) (2024-01-30)
+  - Removes before_commit hook [5e7bcc8](https://github.com/esgf-nimbus/nimbus/commit/5e7bcc8) (2024-01-30)
+- Bump minimal-notebook-gpu to 0.1.5 [3bb40a8](https://github.com/esgf-nimbus/nimbus/commit/3bb40a8) (2024-01-22)
+  - Updates changelog [2ad017c](https://github.com/esgf-nimbus/nimbus/commit/2ad017c) (2024-01-22)
   - Removes push [eae5d88](https://github.com/esgf-nimbus/nimbus/commit/eae5d88) (2024-01-22)
   - Updates changelog [979951b](https://github.com/esgf-nimbus/nimbus/commit/979951b) (2024-01-22)
   - Fixes hook to update changelog [0b1c626](https://github.com/esgf-nimbus/nimbus/commit/0b1c626) (2024-01-22)

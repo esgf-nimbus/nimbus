@@ -1,4 +1,4 @@
-ARG TAG=0.1.17
+ARG TAG=0.1.18
 ARG IMAGE=ghcr.io/esgf-nimbus/minimal-notebook
 FROM ${IMAGE}:${TAG}
 
