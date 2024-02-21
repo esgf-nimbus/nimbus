@@ -40,7 +40,7 @@ jobs:
           files: minimal-notebook/**
       - id: format
         run: |
-          echo "${{ steps.changed-files.outputs.other_modified_files }}" | python -c "import sys,json;d=json.dumps({'directories': sys.stdin.read().strip().split(' ')});print(f'directories={d}')" >> $GITHUB_OUTPUT
+          echo "${{ steps.changed-files.outputs.added_files }} ${{ steps.changed-files.outputs.modified_files }}" | python -c "import sys,json;d=json.dumps({'directories': sys.stdin.read().strip().split(' ')});print(f'directories={d}')" >> $GITHUB_OUTPUT
 
   build-minimal-notebook:
     if: needs.detect-changes.outputs.modified_files_count > 0
