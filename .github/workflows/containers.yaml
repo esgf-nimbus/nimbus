@@ -117,7 +117,8 @@ jobs:
     permissions:
       packages: write
     strategy:
-      matrix: ${{ fromJSON(needs.detect-changes.outputs.directories) }}
+      matrix:
+        directories: ${{ fromJSON(needs.detect-changes.outputs.directories).directories }}
     steps:
       - uses: actions/checkout@v3
       - uses: docker/setup-buildx-action@v2
