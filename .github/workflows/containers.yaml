@@ -82,6 +82,7 @@ jobs:
 
   build-climate-notebook:
     needs:
+      - get-issue-number
       - build-minimal-notebook
     runs-on: ubuntu-latest
     name: Build climate-notebook
@@ -100,9 +101,16 @@ jobs:
           python-version: '3.9'
       - id: get-version
         run: |
-          pip install tbump
-          pushd dockerfiles/climate-notebook
-          echo "version=$(tbump current-version)" >> $GITHUB_OUTPUT
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            VERSION=pr-${{ needs.get-issue-number.outputs.pr-number }}
+            echo "version=$VERSION" >> $GITHUB_OUTPUT
+            echo "build-args=TAG=$VERSION" >> $GITHUB_OUTPUT
+          else
+            pip install tbump
+            pushd dockerfiles/climate-notebook
+            echo "version=$(tbump current-version)" >> $GITHUB_OUTPUT
+            echo "build-args=" >> $GITHUB_OUTPUT
+          fi
       - uses: docker/build-push-action@v5
         with:
           cache-from: type=gha
@@ -110,4 +118,4 @@ jobs:
           context: dockerfiles/climate-notebook
           push: true
           tags: ghcr.io/esgf-nimbus/climate-notebook:${{ steps.get-version.outputs.version }}
-          build-args: "TAG=${{ needs.get-issue-number.outputs.pr-number }}"
+          build-args: "${{ steps.get-version.outputs.build-args }}"
