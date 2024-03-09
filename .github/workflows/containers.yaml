@@ -18,49 +18,20 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  detect-changes:
-    runs-on: ubuntu-latest
-    name: Detect changes to Dockerfiles
-    permissions:
-      pull-requests: read
-    outputs:
-      modified_files_count: ${{ steps.changed-files.outputs.modified_files_count }}
-      other_modified_files_count: ${{ steps.changed-files.outputs.other_modified_files_count }}
-      directories: ${{ steps.format.outputs.directories }}
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-      - name: Detect changed files
-        id: changed-files
-        uses: tj-actions/changed-files@v42
-        with:
-          path: dockerfiles
-          dir_names: true
-          dir_names_max_depth: 1
-          dir_names_exclude_current_dir: true
-          files: minimal-notebook/**
-      - id: format
-        run: |
-          echo "${{ steps.changed-files.outputs.all_changed_files }}" | python -c "import sys,json;d=json.dumps({'directories': sys.stdin.read().strip().split(' ')});print(f'directories={d}')" >> $GITHUB_OUTPUT
-
   build-minimal-notebook:
-    if: needs.detect-changes.outputs.modified_files_count > 0
-    needs:
-      - detect-changes
     runs-on: ubuntu-latest
     name: Build minimal-notebook
     permissions:
       packages: write
     steps:
-      - uses: actions/checkout@v3
-      - uses: docker/setup-buildx-action@v2
-      - uses: docker/login-action@v2
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - uses: actions/setup-python@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: '3.9'
       - id: get-version
@@ -68,7 +39,7 @@ jobs:
           pip install tbump
           pushd dockerfiles/minimal-notebook
           echo "version=$(tbump current-version)" >> $GITHUB_OUTPUT
-      - uses: docker/build-push-action@v4
+      - uses: docker/build-push-action@v5
         with:
           cache-from: type=gha
           cache-to: type=gha,mode=max
@@ -77,23 +48,21 @@ jobs:
           tags: ghcr.io/esgf-nimbus/minimal-notebook:${{ steps.get-version.outputs.version }}
 
   build-climate-notebook:
-    if: needs.detect-changes.outputs.modified_files_count > 0
     needs:
-      - detect-changes
       - build-minimal-notebook
     runs-on: ubuntu-latest
     name: Build climate-notebook
     permissions:
       packages: write
     steps:
-      - uses: actions/checkout@v3
-      - uses: docker/setup-buildx-action@v2
-      - uses: docker/login-action@v2
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - uses: actions/setup-python@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: '3.9'
       - id: get-version
@@ -101,49 +70,10 @@ jobs:
           pip install tbump
           pushd dockerfiles/climate-notebook
           echo "version=$(tbump current-version)" >> $GITHUB_OUTPUT
-      - uses: docker/build-push-action@v4
+      - uses: docker/build-push-action@v5
         with:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           context: dockerfiles/minimal-notebook
           push: ${{ github.event_name == 'push' }}
           tags: ghcr.io/esgf-nimbus/climate-notebook:${{ steps.get-version.outputs.version }}
-
-  build-other-containers:
-    if: always() && needs.detect-changes.outputs.other_modified_files_count > 0
-    needs:
-      - detect-changes
-      - build-climate-notebook
-    runs-on: ubuntu-latest
-    name: Build other containers
-    permissions:
-      packages: write
-    strategy:
-      matrix:
-        directories: ${{ fromJSON(needs.detect-changes.outputs.directories).directories }}
-        exclude:
-          - directories: minimal-notebook
-          - directories: climate-notebook
-    steps:
-      - uses: actions/checkout@v3
-      - uses: docker/setup-buildx-action@v2
-      - uses: docker/login-action@v2
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-      - uses: actions/setup-python@v4
-        with:
-          python-version: '3.9'
-      - id: get-version
-        run: |
-          pip install tbump
-          pushd dockerfiles/${{ matrix.directories }}
-          echo "version=$(tbump current-version)" >> $GITHUB_OUTPUT
-      - uses: docker/build-push-action@v4
-        with:
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-          context: dockerfiles/${{ matrix.directories }}
-          push: ${{ github.event_name == 'push' }}
-          tags: ghcr.io/esgf-nimbus/${{ matrix.directories }}:${{ steps.get-version.outputs.version }}
