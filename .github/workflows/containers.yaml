@@ -74,6 +74,6 @@ jobs:
         with:
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          context: dockerfiles/minimal-notebook
+          context: dockerfiles/climate-notebook
           push: ${{ github.event_name == 'push' }}
           tags: ghcr.io/esgf-nimbus/climate-notebook:${{ steps.get-version.outputs.version }}
