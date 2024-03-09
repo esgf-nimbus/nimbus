@@ -110,4 +110,4 @@ jobs:
           context: dockerfiles/climate-notebook
           push: true
           tags: ghcr.io/esgf-nimbus/climate-notebook:${{ steps.get-version.outputs.version }}
-          builds-args: "TAG=${{ needs.get-issue-number.outputs.pr-number }}"
+          build-args: "TAG=${{ needs.get-issue-number.outputs.pr-number }}"
