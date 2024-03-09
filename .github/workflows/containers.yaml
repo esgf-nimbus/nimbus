@@ -29,9 +29,11 @@ jobs:
       directories: ${{ steps.format.outputs.directories }}
     steps:
       - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
       - name: Detect changed files
         id: changed-files
-        uses: tj-actions/changed-files@v37
+        uses: tj-actions/changed-files@v42
         with:
           path: dockerfiles
           dir_names: true
