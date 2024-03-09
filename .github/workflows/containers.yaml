@@ -38,7 +38,8 @@ jobs:
                   commit_sha: context.sha,
                   owner: context.repo.owner,
                   repo: context.repo.repo,
-                }).data[0].number;
+                })
+              ).data[0].number;
             }
           result-encoding: string
       - id: pr-number
