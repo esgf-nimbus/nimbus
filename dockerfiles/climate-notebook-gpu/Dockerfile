@@ -1,5 +1,5 @@
 ARG TAG=0.1.0
-ARG IMAGE=ghcr.io/esgf-nimbus/llnl-notebook
+ARG IMAGE=ghcr.io/esgf-nimbus/climate-notebook
 FROM ${IMAGE}:${TAG}
 
 USER root
