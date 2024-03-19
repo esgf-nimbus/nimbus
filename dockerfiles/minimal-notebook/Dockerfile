@@ -1,12 +1,4 @@
 ARG TAG=2023-05-01
-FROM python:3.10 as intake-es-builder
-
-COPY intake_es /intake_es
-
-WORKDIR /intake_es
-
-RUN pip install setuptools build && \
-    python -m build
 
 FROM jupyter/base-notebook:${TAG}
 
@@ -42,19 +34,6 @@ RUN groupadd -g 1026 climate && \
     rm -rf /var/lib/apt/lists/* && \
     pip install nbgitpuller && \
     mkdir /notebooks
-
-COPY base.yaml /base.yaml
-
-RUN --mount=type=cache,target=/opt/conda/pkgs \
-    mamba env update -n base -f /base.yaml && \
-    rm /base.yaml && \
-    pip install ecoport && \
-    python -m ecoport -f /base.yaml
-
-COPY --from=intake-es-builder /intake_es/dist /build
-
-RUN python -m pip install /build/*.tar.gz && \
-    rm -rf /build
 
 COPY scripts /scripts
 COPY notebooks /notebooks

@@ -1,0 +1,32 @@
+name: base
+channels:
+  - conda-forge
+dependencies:
+  - pcmdi_metrics
+  - xcdat
+  - xarray
+  - xarray-datatree
+  - pandas
+  - xesmf
+  - xgcm
+  - netcdf4
+  - s3fs
+  - zarr
+  - intake
+  - intake-esm
+  - intake-stac
+  - intake-xarray
+  - gsw-xarray
+  - geoviews
+  - flox
+  - holoviews
+  - hvplot
+  - datashader
+  - seaborn
+  - cartopy
+  - matplotlib
+  - nc-time-axis
+  - ipywidgets
+  - dask-gateway
+  - bokeh<3
+prefix: /opt/conda

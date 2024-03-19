@@ -1,4 +1,8 @@
 # Changelog
+- Bump minimal-notebook to 0.1.19 [b227abe](https://github.com/esgf-nimbus/nimbus/commit/b227abe) (2024-03-08)
+  - Renames minimal-notebook* to climate-notebook and adds new minimal-notebook [7a64382](https://github.com/esgf-nimbus/nimbus/commit/7a64382) (2024-02-20)
+- Bump minimal-notebook to 0.1.18 [d262229](https://github.com/esgf-nimbus/nimbus/commit/d262229) (2024-01-30)
+  - Adds texlive-full to support exporting PDF files [4ba32d4](https://github.com/esgf-nimbus/nimbus/commit/4ba32d4) (2024-01-30)
   - Fixes exporting environment after minimal-notebook build [320492f](https://github.com/esgf-nimbus/nimbus/commit/320492f) (2024-01-30)
   - Removes before_commit hook [5e7bcc8](https://github.com/esgf-nimbus/nimbus/commit/5e7bcc8) (2024-01-30)
   - Fixes hook to update changelog [0b1c626](https://github.com/esgf-nimbus/nimbus/commit/0b1c626) (2024-01-22)
