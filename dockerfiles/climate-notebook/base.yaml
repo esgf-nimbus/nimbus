@@ -2,31 +2,37 @@ name: base
 channels:
   - conda-forge
 dependencies:
-  - pcmdi_metrics
-  - xcdat
+  # Data packages
   - xarray
   - xarray-datatree
   - pandas
-  - xesmf
-  - xgcm
+  - flox
   - netcdf4
   - s3fs
   - zarr
-  - intake
+  # Climate packages
+  - xcdat
+  - xesmf
+  - xgcm
+  - pcmdi_metrics
+  - gsw-xarray
+  # Plotting packages
+  - matplotlib
+  - holoviews
+  - hvplot
+  - geoviews
+  - seaborn
+  - cartopy
+  - datashader
+  # Computing packages
+  - dask-gateway
+  # Discovery packages
   - intake-esm
   - intake-stac
   - intake-xarray
-  - gsw-xarray
-  - geoviews
-  - flox
-  - holoviews
-  - hvplot
-  - datashader
-  - seaborn
-  - cartopy
-  - matplotlib
+  # Extra packages
+  - intake
   - nc-time-axis
   - ipywidgets
-  - dask-gateway
   - bokeh<3
 prefix: /opt/conda
