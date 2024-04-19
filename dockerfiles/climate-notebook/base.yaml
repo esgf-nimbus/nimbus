@@ -30,7 +30,7 @@ dependencies:
   - intake-esm
   - intake-stac
   - intake-xarray
-  # Extra packages
+  # ignore
   - intake
   - nc-time-axis
   - ipywidgets
