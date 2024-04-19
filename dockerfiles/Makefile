@@ -4,7 +4,7 @@ NAMESPACE ?= ghcr.io/esgf-nimbus
 
 build push run: REPOSITORY = $(lastword $(subst /, ,$(PWD)))
 
-build: changelog
+build:
 	docker build $(ARGS) -t $(NAMESPACE)/$(REPOSITORY):$(VERSION) . $(if $(POST_BUILD),&& $(POST_BUILD),)
 
 push:

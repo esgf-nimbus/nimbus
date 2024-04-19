@@ -17,6 +17,9 @@ USER root
 
 COPY base.yaml /base.yaml
 
+ARG BUILD
+ENV BUILD ${BUILD}
+
 RUN --mount=type=cache,target=/opt/conda/pkgs \
     mamba env update -n base -f /base.yaml && \
     rm /base.yaml && \
