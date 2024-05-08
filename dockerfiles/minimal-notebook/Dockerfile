@@ -12,17 +12,13 @@ RUN groupadd -g 1026 climate && \
     apt-get -q update && \
     DEBIAN_FRONTEND=noninteractive \
         apt-get install --yes --no-install-recommends \
-        git \
         less \
-        vim \
         zip \
         unzip \
         lz4 \
         gzip \
         bzip2 \
-        rsync \
         openssh-client \
-        curl \
         locate \
         htop \
         iputils-ping \
@@ -35,11 +31,19 @@ RUN groupadd -g 1026 climate && \
     pip install nbgitpuller && \
     mkdir /notebooks
 
+RUN mamba install -y \
+    git \
+    vim \
+    rsync \
+    curl && \
+    rm -rf /opt/conda/pkgs
+
 COPY scripts /scripts
 COPY notebooks /notebooks
 COPY changelog.md /changelog.md
 
-RUN source /scripts/render-intro.sh
+RUN source /scripts/render-intro.sh && \
+    chown -R $NB_USER:$NB_GROUP /home/jovyan
 
 USER $NB_USER
 
