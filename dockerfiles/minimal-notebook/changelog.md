@@ -1,4 +1,7 @@
 # Changelog
+- Bump minimal-notebook to 0.1.20 [4773654](https://github.com/esgf-nimbus/nimbus/commit/4773654) (2024-05-08)
+  - Updates system tools [9edfb1c](https://github.com/esgf-nimbus/nimbus/commit/9edfb1c) (2024-05-08)
+  - Updates changelog [3735d67](https://github.com/esgf-nimbus/nimbus/commit/3735d67) (2024-03-08)
 - Bump minimal-notebook to 0.1.19 [b227abe](https://github.com/esgf-nimbus/nimbus/commit/b227abe) (2024-03-08)
   - Renames minimal-notebook* to climate-notebook and adds new minimal-notebook [7a64382](https://github.com/esgf-nimbus/nimbus/commit/7a64382) (2024-02-20)
 - Bump minimal-notebook to 0.1.18 [d262229](https://github.com/esgf-nimbus/nimbus/commit/d262229) (2024-01-30)
