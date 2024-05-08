@@ -1,6 +1,6 @@
 .DEFAULT_GOAL = build
 
-VERSION = 0.1.19
+VERSION = 0.1.20
 
 run: ARGS = -p 8888:8888
 
