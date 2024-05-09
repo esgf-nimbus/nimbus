@@ -31,7 +31,9 @@ RUN groupadd -g 1026 climate && \
     pip install nbgitpuller && \
     mkdir /notebooks
 
-RUN mamba install -y \
+RUN rm /opt/conda/conda-meta/pinned && \
+    mamba install -y \
+    "python<3.11" \
     zstandard \
     git \
     vim \
