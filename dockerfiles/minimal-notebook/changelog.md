@@ -1,4 +1,7 @@
 # Changelog
+- Bump minimal-notebook to 0.1.21 [a5b740c](https://github.com/esgf-nimbus/nimbus/commit/a5b740c) (2024-05-08)
+  - Fixes base image [0a87c15](https://github.com/esgf-nimbus/nimbus/commit/0a87c15) (2024-05-08)
+  - Updates changelog [8076c6c](https://github.com/esgf-nimbus/nimbus/commit/8076c6c) (2024-05-08)
 - Bump minimal-notebook to 0.1.20 [4773654](https://github.com/esgf-nimbus/nimbus/commit/4773654) (2024-05-08)
   - Updates system tools [9edfb1c](https://github.com/esgf-nimbus/nimbus/commit/9edfb1c) (2024-05-08)
   - Updates changelog [3735d67](https://github.com/esgf-nimbus/nimbus/commit/3735d67) (2024-03-08)
