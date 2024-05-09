@@ -1,0 +1,12 @@
+# Conda configuration see https://conda.io/projects/conda/en/latest/configuration.html
+
+auto_update_conda: false
+show_channel_urls: true
+channels:
+  - conda-forge
+create_default_packages:
+  - curl>=8.4
+  - zstandard
+  - git
+  - vim
+  - rsync

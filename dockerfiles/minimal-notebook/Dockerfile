@@ -38,12 +38,13 @@ RUN rm /opt/conda/conda-meta/pinned && \
     git \
     vim \
     rsync \
-    curl && \
+    "curl>=8.4" && \
     rm -rf /opt/conda/pkgs
 
 COPY scripts /scripts
 COPY notebooks /notebooks
 COPY changelog.md /changelog.md
+COPY .condarc /opt/conda/.condarc
 
 RUN source /scripts/render-intro.sh && \
     chown -R $NB_USER:$NB_GROUP /home/jovyan
