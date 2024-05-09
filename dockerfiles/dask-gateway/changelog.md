@@ -1,4 +1,7 @@
 # Changelog
+- Bump dask-gateway to 0.1.7 [97f6646](https://github.com/esgf-nimbus/nimbus/commit/97f6646) (2024-05-09)
+  - Updates dask environment [441e381](https://github.com/esgf-nimbus/nimbus/commit/441e381) (2024-05-09)
+  - Updates changelog [a4b9607](https://github.com/esgf-nimbus/nimbus/commit/a4b9607) (2024-04-18)
 - Bump dask-gateway to 0.1.6 [b25f9ba](https://github.com/esgf-nimbus/nimbus/commit/b25f9ba) (2024-04-18)
   - Updates dask-gateway environment [784e822](https://github.com/esgf-nimbus/nimbus/commit/784e822) (2024-04-18)
   - Renames minimal-notebook* to climate-notebook and adds new minimal-notebook [7a64382](https://github.com/esgf-nimbus/nimbus/commit/7a64382) (2024-02-20)
