@@ -1,6 +1,6 @@
-ARG TAG=2023-05-01
+ARG TAG=2024-05-05
 
-FROM jupyter/base-notebook:${TAG}
+FROM quay.io/jupyter/base-notebook:${TAG}
 
 LABEL org.opencontainers.image.source="https://github.com/esgf-nimbus/nimbus"
 LABEL org.opencontainers.image.url="https://github.com/esgf-nimbus/nimbus/blob/main/dockerfiles/minimal-notebook/Dockerfile"
@@ -32,6 +32,7 @@ RUN groupadd -g 1026 climate && \
     mkdir /notebooks
 
 RUN mamba install -y \
+    zstandard \
     git \
     vim \
     rsync \
