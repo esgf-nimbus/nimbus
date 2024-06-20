@@ -17,4 +17,4 @@ changelog:
 	git log --pretty="%s [%h](https://github.com/esgf-nimbus/nimbus/commit/%h) (%cs)" . | python3 -c "import sys;lines=[f'- {x}' if x.startswith('Bump') else f'  - {x}' for x in sys.stdin]; print(''.join(['# Changelog\n'] + lines))" > changelog.md
 
 bump-%:
-	tbump $(if $(COMMIT),,--dry-run) --no-tag --no-push $(shell pysemver bump $* $(shell tbump current-version)) $(if $(COMMIT),&& make changelog && git add changelog.md && git commit -m "Updates changelog",)
+	tbump --no-tag --no-push $(shell pysemver bump $* $(shell tbump current-version)) $(if $(COMMIT),&& make changelog && git add changelog.md && git commit -m "Updates changelog",)
