@@ -1,5 +1,5 @@
 .DEFAULT_GOAL = build
 
-VERSION = 0.1.7
+VERSION = 0.1.8
 
 include ../Makefile
