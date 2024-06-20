@@ -1,4 +1,4 @@
-ARG TAG=0.1.2
+ARG TAG=0.1.3
 ARG IMAGE=ghcr.io/esgf-nimbus/climate-notebook
 FROM ${IMAGE}:${TAG}
 
