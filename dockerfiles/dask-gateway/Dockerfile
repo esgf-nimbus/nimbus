@@ -19,6 +19,7 @@ COPY --chown=dask:conda conda-envs/ /conda-envs
 
 RUN --mount=type=cache,target=/opt/conda/pkgs \
 	mamba env update -n base -f /conda-envs/base.yaml && \
+	mamba remove xesmf --force && \
 	mamba install -y \
 		tini
 
