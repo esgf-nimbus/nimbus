@@ -1,4 +1,11 @@
 # Changelog
+- Bump climate-notebook-gpu to 0.1.5 [dc0a94a](https://github.com/esgf-nimbus/nimbus/commit/dc0a94a) (2024-06-20)
+- Bump climate-notebook to 0.1.5 [eda03d5](https://github.com/esgf-nimbus/nimbus/commit/eda03d5) (2024-06-20)
+- Bump climate-notebook-gpu to 0.1.4 [ccc01e7](https://github.com/esgf-nimbus/nimbus/commit/ccc01e7) (2024-06-20)
+- Bump climate-notebook to 0.1.4 [7eeb71a](https://github.com/esgf-nimbus/nimbus/commit/7eeb71a) (2024-06-20)
+- Bump climate-notebook-gpu to 0.1.3 [d5f308e](https://github.com/esgf-nimbus/nimbus/commit/d5f308e) (2024-06-20)
+- Bump climate-notebook to 0.1.3 [489506a](https://github.com/esgf-nimbus/nimbus/commit/489506a) (2024-06-20)
+  - Updates changelog [b1e8fa6](https://github.com/esgf-nimbus/nimbus/commit/b1e8fa6) (2024-05-09)
 - Bump climate-notebook-gpu to 0.1.2 [f23c835](https://github.com/esgf-nimbus/nimbus/commit/f23c835) (2024-05-09)
 - Bump climate-notebook to 0.1.2 [230b168](https://github.com/esgf-nimbus/nimbus/commit/230b168) (2024-05-09)
   - Adds organization to packages [f691342](https://github.com/esgf-nimbus/nimbus/commit/f691342) (2024-04-18)
