@@ -1,4 +1,11 @@
 # Changelog
+- Bump climate-notebook to 0.1.5 [eda03d5](https://github.com/esgf-nimbus/nimbus/commit/eda03d5) (2024-06-20)
+  - Adds xesmf back libcurl issue is on the host systems [e15d073](https://github.com/esgf-nimbus/nimbus/commit/e15d073) (2024-06-20)
+- Bump climate-notebook to 0.1.4 [7eeb71a](https://github.com/esgf-nimbus/nimbus/commit/7eeb71a) (2024-06-20)
+  - Removes xesmf [a4f1230](https://github.com/esgf-nimbus/nimbus/commit/a4f1230) (2024-06-20)
+- Bump climate-notebook to 0.1.3 [489506a](https://github.com/esgf-nimbus/nimbus/commit/489506a) (2024-06-20)
+  - Disables xesmf due to libcurl issue #18 [e834d41](https://github.com/esgf-nimbus/nimbus/commit/e834d41) (2024-06-20)
+  - Updates changelog [a8c9f69](https://github.com/esgf-nimbus/nimbus/commit/a8c9f69) (2024-05-09)
 - Bump climate-notebook to 0.1.2 [230b168](https://github.com/esgf-nimbus/nimbus/commit/230b168) (2024-05-09)
 - Bump minimal-notebook to 0.1.22 [03122f9](https://github.com/esgf-nimbus/nimbus/commit/03122f9) (2024-05-08)
 - Bump minimal-notebook to 0.1.21 [a5b740c](https://github.com/esgf-nimbus/nimbus/commit/a5b740c) (2024-05-08)
