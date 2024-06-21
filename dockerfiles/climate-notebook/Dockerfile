@@ -22,7 +22,6 @@ ENV BUILD ${BUILD}
 
 RUN --mount=type=cache,target=/opt/conda/pkgs \
     mamba env update -n base -f /base.yaml && \
-    mamba remove xesmf --force && \
     rm /base.yaml && \
     pip install ecoport && \
     python -m ecoport -f /base.yaml
