@@ -1,4 +1,5 @@
 # Changelog
+  - Updates changelog [65c24e4](https://github.com/esgf-nimbus/nimbus/commit/65c24e4) (2024-06-20)
 - Bump climate-notebook-gpu to 0.1.5 [dc0a94a](https://github.com/esgf-nimbus/nimbus/commit/dc0a94a) (2024-06-20)
 - Bump climate-notebook to 0.1.5 [eda03d5](https://github.com/esgf-nimbus/nimbus/commit/eda03d5) (2024-06-20)
 - Bump climate-notebook-gpu to 0.1.4 [ccc01e7](https://github.com/esgf-nimbus/nimbus/commit/ccc01e7) (2024-06-20)

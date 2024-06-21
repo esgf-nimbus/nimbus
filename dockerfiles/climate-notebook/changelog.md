@@ -1,4 +1,6 @@
 # Changelog
+  - Fixes missing xesmf [e212e84](https://github.com/esgf-nimbus/nimbus/commit/e212e84) (2024-06-20)
+  - Updates changelog [e1889a1](https://github.com/esgf-nimbus/nimbus/commit/e1889a1) (2024-06-20)
 - Bump climate-notebook to 0.1.5 [eda03d5](https://github.com/esgf-nimbus/nimbus/commit/eda03d5) (2024-06-20)
   - Adds xesmf back libcurl issue is on the host systems [e15d073](https://github.com/esgf-nimbus/nimbus/commit/e15d073) (2024-06-20)
 - Bump climate-notebook to 0.1.4 [7eeb71a](https://github.com/esgf-nimbus/nimbus/commit/7eeb71a) (2024-06-20)

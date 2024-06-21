@@ -37,6 +37,7 @@ dependencies:
 - xarray=2024.6.0
 - xarray-datatree=0.0.14
 - xcdat=0.7.0
+- xesmf=0.8.5
 - xgcm=0.8.1
 - zarr=2.18.2
 - zstandard=0.22.0
