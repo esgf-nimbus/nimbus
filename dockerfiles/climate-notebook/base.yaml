@@ -12,6 +12,7 @@ dependencies:
   - zarr
   # Climate packages
   - xcdat
+  - xesmf
   - xgcm
   - pcmdi_metrics
   - gsw-xarray
@@ -30,7 +31,6 @@ dependencies:
   - intake-stac
   - intake-xarray
   # ignore
-  # - xesmf disabled due to libcurl issue
   - intake
   - nc-time-axis
   - ipywidgets
