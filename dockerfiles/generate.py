@@ -20,35 +20,31 @@ def main():
     )
 
     output = subprocess.run(
-        f"mamba list {search_args!r} --json",
-        capture_output=True,
-        shell=True
+        f"mamba list {search_args!r} --json", capture_output=True, shell=True
     )
 
     output_json = json.loads(output.stdout)
 
-    versions = {
-        package["name"]: package["version"] for package in output_json
-    }
+    versions = {package["name"]: package["version"] for package in output_json}
 
     table = []
     categories = list(categories.items())
 
     for i in range(0, len(categories), 3):
-        header = " | ".join([x[0] for x in categories[i:i+3]])
-        separator = " | ".join([f"{'-'*len(x[0])}" for x in categories[i:i+3]])
+        header = " | ".join([x[0] for x in categories[i : i + 3]])
+        separator = " | ".join([f"{'-'*len(x[0])}" for x in categories[i : i + 3]])
         header = f"| {header} |\n| {separator} |"
 
-        rows = itertools.zip_longest(*[x[1] for x in categories[i:i+3]])
+        rows = itertools.zip_longest(*[x[1] for x in categories[i : i + 3]])
         rows = [
             " | ".join(
-                [
-                    "" if y is None else f"{y} {get_version(y, versions)}"
-                    for y in x
-                ]
-            ) for x in rows
+                ["" if y is None else f"{y} {get_version(y, versions)}" for y in x]
+            )
+            for x in rows
         ]
-        rows = "\n".join(f"| {x} |" for x in rows)
+        rows = "\n".join(
+            f"| [{x}](https://anaconda.org/conda-forge/{x}) |" for x in rows
+        )
 
         table.append(f"{header}\n{rows}\n")
 
