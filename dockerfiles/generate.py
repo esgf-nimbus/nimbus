@@ -38,12 +38,15 @@ def main():
         rows = itertools.zip_longest(*[x[1] for x in categories[i : i + 3]])
         rows = [
             " | ".join(
-                ["" if y is None else f"{y} {get_version(y, versions)}" for y in x]
+                [
+                    "" if y is None else f"[{y} {get_version(y, versions)}](https://anaconda.org/conda-forge/{y})" 
+                     for y in x
+                ]
             )
             for x in rows
         ]
         rows = "\n".join(
-            f"| [{x}](https://anaconda.org/conda-forge/{x}) |" for x in rows
+            f"| {x} |" for x in rows
         )
 
         table.append(f"{header}\n{rows}\n")
