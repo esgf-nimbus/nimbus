@@ -20,4 +20,4 @@ bump-%:
 	tbump --no-tag --no-push $(shell pysemver bump $* $(shell tbump current-version)) && make changelog && git add changelog.md && git commit -m "Updates changelog"
 
 readme:
-	docker run -it --rm --entrypoint python -v $(PWD):/host -w /host $(NAMESPACE)/$(REPOSITORY):$(VERSION) /host/generate.py $(ENVIRONMENT_FILE)
+	docker run -it --rm --entrypoint python -v $(PWD)/../:/host -w /host $(NAMESPACE)/$(REPOSITORY):$(VERSION) /host/generate.py $(REPOSITORY)/$(ENVIRONMENT_FILE) $(REPOSITORY)

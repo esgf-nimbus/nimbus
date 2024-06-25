@@ -9,6 +9,7 @@
 | netcdf4 1.6.5 | gsw-xarray 0.4.0 | seaborn 0.13.2 |
 | s3fs 2024.6.0 |  | cartopy 0.23.0 |
 | zarr 2.18.2 |  | datashader 0.16.2 |
+
 | Computing packages | Discovery packages |
 | ------------------ | ------------------ |
 | dask-gateway 2024.1.0 | intake-esm 2024.2.6 |

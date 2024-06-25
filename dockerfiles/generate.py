@@ -1,3 +1,4 @@
+import os
 import json
 import re
 import subprocess
@@ -8,6 +9,7 @@ import argparse
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("file", help="Conda environment file")
+    parser.add_argument("output-path", help="Output directory")
 
     kwargs = vars(parser.parse_args())
 
@@ -48,7 +50,7 @@ def main():
         ]
         rows = "\n".join(f"| {x} |" for x in rows)
 
-        table.append(f"{header}\n{rows}")
+        table.append(f"{header}\n{rows}\n")
 
     table = "\n".join(table)
 
@@ -56,7 +58,9 @@ def main():
 
 {table}"""
 
-    with open("README.md", "w") as fd:
+    output_path = os.path.join(kwargs["output-path"], "README.md")
+
+    with open(output_path, "w") as fd:
         fd.write(data)
 
 
