@@ -39,7 +39,7 @@ def main():
         rows = [
             " | ".join(
                 [
-                    "" if y is None else f"[{y} {get_version(y, versions)}](https://anaconda.org/conda-forge/{y})" 
+                    "" if y is None else f"[{y}](https://anaconda.org/conda-forge/{y}) {get_version(y, versions)}" 
                      for y in x
                 ]
             )
@@ -83,7 +83,7 @@ def get_categories(file, **_):
 
     for line in lines:
         if "#" in line:
-            m = re.search("# (.*)(?: packages)?", line)
+            m = re.search(r"# ([^\s]*)(?: packages)?", line)
 
             if m is None:
                 continue
