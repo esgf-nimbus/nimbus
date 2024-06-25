@@ -1,4 +1,5 @@
 # Changelog
+  - Updates changelog [e94860b](https://github.com/esgf-nimbus/nimbus/commit/e94860b) (2024-05-08)
 - Bump minimal-notebook to 0.1.22 [03122f9](https://github.com/esgf-nimbus/nimbus/commit/03122f9) (2024-05-08)
   - Pins curl and adds default packages for new environments [99eeb8e](https://github.com/esgf-nimbus/nimbus/commit/99eeb8e) (2024-05-08)
   - Fixes downgrading python [ded8016](https://github.com/esgf-nimbus/nimbus/commit/ded8016) (2024-05-08)
