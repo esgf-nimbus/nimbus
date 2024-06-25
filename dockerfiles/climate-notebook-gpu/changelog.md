@@ -1,4 +1,10 @@
 # Changelog
+  - Fixes parsing headers and links [7762233](https://github.com/esgf-nimbus/nimbus/commit/7762233) (2024-06-25)
+  - Fixes links [484946c](https://github.com/esgf-nimbus/nimbus/commit/484946c) (2024-06-25)
+  - Adds links to packages [40faf06](https://github.com/esgf-nimbus/nimbus/commit/40faf06) (2024-06-25)
+  - Fixes readme generation [97deb65](https://github.com/esgf-nimbus/nimbus/commit/97deb65) (2024-06-25)
+  - Adds README for environments [a00849e](https://github.com/esgf-nimbus/nimbus/commit/a00849e) (2024-06-25)
+  - Updates changelog [6f96980](https://github.com/esgf-nimbus/nimbus/commit/6f96980) (2024-06-20)
   - Updates changelog [65c24e4](https://github.com/esgf-nimbus/nimbus/commit/65c24e4) (2024-06-20)
 - Bump climate-notebook-gpu to 0.1.5 [dc0a94a](https://github.com/esgf-nimbus/nimbus/commit/dc0a94a) (2024-06-20)
 - Bump climate-notebook to 0.1.5 [eda03d5](https://github.com/esgf-nimbus/nimbus/commit/eda03d5) (2024-06-20)
