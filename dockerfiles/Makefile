@@ -2,7 +2,7 @@
 
 NAMESPACE ?= ghcr.io/esgf-nimbus
 
-build push run: REPOSITORY = $(lastword $(subst /, ,$(PWD)))
+build push run readme: REPOSITORY = $(lastword $(subst /, ,$(PWD)))
 
 build:
 	docker build $(ARGS) -t $(NAMESPACE)/$(REPOSITORY):$(VERSION) . $(if $(POST_BUILD),&& $(POST_BUILD),)
@@ -18,3 +18,6 @@ changelog:
 
 bump-%:
 	tbump --no-tag --no-push $(shell pysemver bump $* $(shell tbump current-version)) && make changelog && git add changelog.md && git commit -m "Updates changelog"
+
+readme:
+	docker run -it --rm --entrypoint python -v $(PWD):/host -w /host $(NAMESPACE)/$(REPOSITORY):$(VERSION) /host/generate.py $(ENVIRONMENT_FILE)

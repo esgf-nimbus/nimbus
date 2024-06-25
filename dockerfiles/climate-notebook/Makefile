@@ -12,4 +12,6 @@ export-env: ENTRYPOINT = /bin/bash
 export-env: COMMAND = -c "cp /base.yaml /conda-envs/"
 export-env: run
 
+ENVIRONMENT_FILE = base.yaml
+
 include ../Makefile
