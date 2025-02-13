@@ -1,8 +1,7 @@
 .DEFAULT_GOAL: build
 
 NAMESPACE ?= ghcr.io/esgf-nimbus
-
-release build push run readme: REPOSITORY = $(lastword $(subst /, ,$(PWD)))
+REPOSITORY = $(lastword $(subst /, ,$(PWD)))
 
 release: bump-patch changelog $(if $(wildcard README.md),readme,)
 	$(MAKE) build-push
