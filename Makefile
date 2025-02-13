@@ -5,3 +5,9 @@ export-dask-gateway-env:
 		-v ./dockerfiles/minimal-notebook/conda-envs:/conda-envs \
 		ghcr.io/esgf-nimbus/dask-gateway:$(shell tbump -C dockerfiles/dask-gateway current-version) \
 		mamba env export -n base -f /conda-envs/dask-gateway.yaml
+
+.PHONY: build-venv
+build-venv:
+	python3 -m venv build-venv
+	. build-venv/bin/activate && \
+		pip install tbump semver
