@@ -1,4 +1,7 @@
 # Changelog
+- Bump minimal-notebook to 0.1.23 [fc3d903](https://github.com/esgf-nimbus/nimbus/commit/fc3d903) (2025-02-13)
+  - Updates the base [e70fe31](https://github.com/esgf-nimbus/nimbus/commit/e70fe31) (2025-02-13)
+  - Updates changelog for minimal-notebook [8bf1872](https://github.com/esgf-nimbus/nimbus/commit/8bf1872) (2024-06-25)
   - Updates changelog [e94860b](https://github.com/esgf-nimbus/nimbus/commit/e94860b) (2024-05-08)
 - Bump minimal-notebook to 0.1.22 [03122f9](https://github.com/esgf-nimbus/nimbus/commit/03122f9) (2024-05-08)
   - Pins curl and adds default packages for new environments [99eeb8e](https://github.com/esgf-nimbus/nimbus/commit/99eeb8e) (2024-05-08)
