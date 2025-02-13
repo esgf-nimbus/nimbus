@@ -1,4 +1,4 @@
-ARG TAG=2024-05-05
+ARG TAG=2025-02-12
 
 FROM quay.io/jupyter/base-notebook:${TAG}
 
