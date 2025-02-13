@@ -4,7 +4,7 @@ NAMESPACE ?= ghcr.io/esgf-nimbus
 
 release build push run readme: REPOSITORY = $(lastword $(subst /, ,$(PWD)))
 
-release: bump-patch changelog readme commit build push
+release: bump-patch changelog $(if $(wildcard README.md),readme,) commit build push
 
 build:
 	docker build $(ARGS) -t $(NAMESPACE)/$(REPOSITORY):$(VERSION) . $(if $(POST_BUILD),&& $(POST_BUILD),)
