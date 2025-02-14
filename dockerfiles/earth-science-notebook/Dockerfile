@@ -1,5 +1,5 @@
 ARG TAG=0.1.23
-FROM python:3.10 as intake-es-builder
+FROM python:3.10 AS intake-es-builder
 
 COPY intake_es /intake_es
 
@@ -11,14 +11,14 @@ RUN pip install setuptools build && \
 FROM ghcr.io/esgf-nimbus/minimal-notebook:${TAG}
 
 LABEL org.opencontainers.image.source="https://github.com/esgf-nimbus/nimbus"
-LABEL org.opencontainers.image.url="https://github.com/esgf-nimbus/nimbus/blob/main/dockerfiles/climate-notebook/Dockerfile"
+LABEL org.opencontainers.image.url="https://github.com/esgf-nimbus/nimbus/blob/main/dockerfiles/earth-science-notebook/Dockerfile"
 
 USER root
 
 COPY base.yaml /base.yaml
 
 ARG BUILD
-ENV BUILD ${BUILD}
+ENV BUILD=${BUILD}
 
 RUN --mount=type=cache,target=/opt/conda/pkgs \
     mamba env update -n base -f /base.yaml && \

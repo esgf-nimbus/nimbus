@@ -10,7 +10,7 @@ dependencies:
   - netcdf4
   - s3fs
   - zarr
-  # Climate packages
+  # Earth Science packages
   - xcdat
   - xesmf
   - xgcm

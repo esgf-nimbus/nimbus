@@ -10,7 +10,7 @@ regex = '''
   '''
 
 [git]
-message_template = "Bump climate-notebook to {new_version}"
+message_template = "Bump earth-science-notebook to {new_version}"
 tag_template = "v{new_version}"
 
 [[file]]
@@ -18,5 +18,5 @@ src = "Makefile"
 search = "VERSION = {current_version}"
 
 [[file]]
-src = "../climate-notebook-gpu/Dockerfile"
+src = "../earth-science-notebook-gpu/Dockerfile"
 search = "TAG={current_version}"

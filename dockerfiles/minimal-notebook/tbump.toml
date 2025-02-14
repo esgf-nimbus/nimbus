@@ -18,5 +18,5 @@ src = "Makefile"
 search = "VERSION = {current_version}"
 
 [[file]]
-src = "../climate-notebook/Dockerfile"
+src = "../earth-science-notebook/Dockerfile"
 search = "TAG={current_version}"

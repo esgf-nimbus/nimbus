@@ -80,12 +80,12 @@ jobs:
           push: true
           tags: ghcr.io/esgf-nimbus/minimal-notebook:${{ steps.get-version.outputs.version }}
 
-  build-climate-notebook:
+  build-earth-science-notebook:
     needs:
       - get-issue-number
       - build-minimal-notebook
     runs-on: ubuntu-latest
-    name: Build climate-notebook
+    name: Build earth-science-notebook
     permissions:
       packages: write
     steps:
@@ -107,7 +107,7 @@ jobs:
             echo "build-args=TAG=$VERSION" >> $GITHUB_OUTPUT
           else
             pip install tbump
-            pushd dockerfiles/climate-notebook
+            pushd dockerfiles/earth-science-notebook
             echo "version=$(tbump current-version)" >> $GITHUB_OUTPUT
             echo "build-args=" >> $GITHUB_OUTPUT
           fi
@@ -115,17 +115,17 @@ jobs:
         with:
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          context: dockerfiles/climate-notebook
+          context: dockerfiles/earth-science-notebook
           push: true
-          tags: ghcr.io/esgf-nimbus/climate-notebook:${{ steps.get-version.outputs.version }}
+          tags: ghcr.io/esgf-nimbus/earth-science-notebook:${{ steps.get-version.outputs.version }}
           build-args: "${{ steps.get-version.outputs.build-args }}"
 
-  build-climate-notebook-gpu:
+  build-earth-science-notebook-gpu:
     needs:
       - get-issue-number
-      - build-climate-notebook
+      - build-earth-science-notebook
     runs-on: ubuntu-latest
-    name: Build climate-notebook-gpu
+    name: Build earth-science-notebook-gpu
     permissions:
       packages: write
     steps:
@@ -147,7 +147,7 @@ jobs:
             echo "build-args=TAG=$VERSION" >> $GITHUB_OUTPUT
           else
             pip install tbump
-            pushd dockerfiles/climate-notebook-gpu
+            pushd dockerfiles/earth-science-notebook-gpu
             echo "version=$(tbump current-version)" >> $GITHUB_OUTPUT
             echo "build-args=" >> $GITHUB_OUTPUT
           fi
@@ -155,9 +155,9 @@ jobs:
         with:
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          context: dockerfiles/climate-notebook-gpu
+          context: dockerfiles/earth-science-notebook-gpu
           push: true
-          tags: ghcr.io/esgf-nimbus/climate-notebook-gpu:${{ steps.get-version.outputs.version }}
+          tags: ghcr.io/esgf-nimbus/earth-science-notebook-gpu:${{ steps.get-version.outputs.version }}
           build-args: "${{ steps.get-version.outputs.build-args }}"
 
   other-containers:
@@ -169,7 +169,7 @@ jobs:
       - uses: actions/checkout@v4
       - id: get-paths
         run: |
-          CONTAINERS="$(ls dockerfiles/ | grep -v -E "Makefile|climate*|minimal" | jq -R -s -c 'split("\n")[:-1]')"
+          CONTAINERS="$(ls dockerfiles/ | grep -v -E "Makefile|earth-science*|minimal" | jq -R -s -c 'split("\n")[:-1]')"
 
           echo "directories=$CONTAINERS" >> $GITHUB_OUTPUT
 
