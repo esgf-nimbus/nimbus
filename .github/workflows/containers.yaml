@@ -25,7 +25,7 @@ jobs:
       contents: read
     outputs:
       pr-number: "${{ steps.pr-number.outputs.pr-number }}"
-    if: github.event_name == "pull_request"
+    if: github.event_name == 'pull_request'
     steps:
       - uses: actions/github-script@v6
         id: get-issue-number
