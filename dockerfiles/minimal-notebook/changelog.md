@@ -1,4 +1,7 @@
 # Changelog
+- Bump minimal-notebook to 0.1.25 [185a8cb](https://github.com/esgf-nimbus/nimbus/commit/185a8cb) (2025-02-22)
+  - Removes textlive-full to reduce container size [7dab72a](https://github.com/esgf-nimbus/nimbus/commit/7dab72a) (2025-02-22)
+  - Updates minimal-notebook to 0.1.24 [655a3d2](https://github.com/esgf-nimbus/nimbus/commit/655a3d2) (2025-02-22)
 - Bump minimal-notebook to 0.1.24 [5f82bf7](https://github.com/esgf-nimbus/nimbus/commit/5f82bf7) (2025-02-22)
   - Fixes installing nbgitpuller [c9ab64f](https://github.com/esgf-nimbus/nimbus/commit/c9ab64f) (2025-02-22)
   - Renames climate to earth-science [939838a](https://github.com/esgf-nimbus/nimbus/commit/939838a) (2025-02-13)
