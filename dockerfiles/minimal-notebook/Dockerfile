@@ -12,19 +12,27 @@ RUN groupadd -g 1026 climate && \
     apt-get -q update && \
     DEBIAN_FRONTEND=noninteractive \
         apt-get install --yes --no-install-recommends \
-        less \
-        zip \
-        unzip \
-        lz4 \
-        gzip \
-        bzip2 \
-        openssh-client \
-        locate \
-        htop \
-        iputils-ping \
-        dnsutils \
-        texlive-full \
-        && \
+			curl \
+			git \
+			nano-tiny \
+			tzdata \
+			lz4 \
+			gzip \
+			bzip2 \
+			zip \
+			unzip \
+			vim-tiny \
+			openssh-client \
+			less \
+			texlive-xetex \
+			texlive-fonts-recommended \
+			texlive-plain-generic \
+			xclip \
+			locate \
+			htop \
+			iputils-ping \
+			dnsutils \
+			&& \
     apt-get purge && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \
