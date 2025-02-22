@@ -2,6 +2,8 @@
 
 VERSION = 0.1.6
 
+release: POST_RELEASE = git add .; git commit -m "Updates dask-gateway environment"
+
 run: ARGS = -p 8888:8888 -v $(PWD)/../dask-gateway/conda-envs:/conda-envs
 
 build: ARGS = --build-arg="BUILD=$(shell date)"

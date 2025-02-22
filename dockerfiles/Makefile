@@ -5,6 +5,7 @@ REPOSITORY = $(lastword $(subst /, ,$(PWD)))
 
 release: bump-patch changelog $(if $(wildcard README.md),readme,)
 	$(MAKE) build-push
+	$(if $(POST_RELEASE),$(POST_RELEASE))
 
 build-push: commit build push
 
