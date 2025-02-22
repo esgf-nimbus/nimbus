@@ -14,7 +14,7 @@ build-venv:
 
 .PHONY: release
 release: 
-	@for container in earth-science-notebook earth-science-notebook-gpu dask-gateway; do \
+	@for container in minimal-notebook earth-science-notebook earth-science-notebook-gpu dask-gateway; do \
 		cd dockerfiles/$$container; \
 		make release; \
 		cd ../..; \
