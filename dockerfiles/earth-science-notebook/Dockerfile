@@ -1,4 +1,4 @@
-ARG TAG=0.1.24
+ARG TAG=0.1.25
 FROM python:3.10 AS intake-es-builder
 
 COPY intake_es /intake_es
