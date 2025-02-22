@@ -28,7 +28,6 @@ RUN groupadd -g 1026 climate && \
     apt-get purge && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \
-    pip install nbgitpuller && \
     mkdir /notebooks
 
 RUN rm /opt/conda/conda-meta/pinned && \
@@ -38,6 +37,7 @@ RUN rm /opt/conda/conda-meta/pinned && \
     git \
     vim \
     rsync \
+    nbgitpuller \
     "curl>=8.4" && \
     rm -rf /opt/conda/pkgs
 
