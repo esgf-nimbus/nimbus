@@ -11,3 +11,9 @@ build-venv:
 	python3 -m venv build-venv
 	. build-venv/bin/activate && \
 		pip install tbump semver
+
+.PHONY: release
+release: 
+	@for container in earth-science-notebook earth-science-notebook-gpu dask-gateway; do \
+		make -C dockerfiles/$$container release; \
+	done
