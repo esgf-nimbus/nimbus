@@ -1,4 +1,7 @@
 # Changelog
+- Bump climate-notebook-gpu to 0.1.8 [7168567](https://github.com/esgf-nimbus/nimbus/commit/7168567) (2025-02-22)
+- Bump earth-science-notebook to 0.1.7 [25fd573](https://github.com/esgf-nimbus/nimbus/commit/25fd573) (2025-02-22)
+  - Updates earth-science-notebook-gpu to 0.1.7 [33735bb](https://github.com/esgf-nimbus/nimbus/commit/33735bb) (2025-02-13)
 - Bump climate-notebook-gpu to 0.1.7 [0e43481](https://github.com/esgf-nimbus/nimbus/commit/0e43481) (2025-02-13)
   - Updates earth-science-notebook-gpu to 0.1.6 [2f932c2](https://github.com/esgf-nimbus/nimbus/commit/2f932c2) (2025-02-13)
 - Bump climate-notebook-gpu to 0.1.6 [acd2c78](https://github.com/esgf-nimbus/nimbus/commit/acd2c78) (2025-02-13)
