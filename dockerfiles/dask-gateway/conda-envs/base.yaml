@@ -8,7 +8,7 @@ dependencies:
 - datashader=0.17.0
 - flox=0.10.0
 - geoviews=1.9.6
-- git=2.47.1
+- git=2.48.1
 - gsw-xarray=0.4.0
 - holoviews=1.17.1
 - hvplot=0.10.0
@@ -23,6 +23,7 @@ dependencies:
 - mamba=2.0.5
 - matplotlib=3.10.0
 - nbclassic=1.2.0
+- nbgitpuller=1.2.2
 - nc-time-axis=1.4.1
 - netcdf4=1.7.2
 - pandas=2.2.3
