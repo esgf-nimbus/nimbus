@@ -1,4 +1,4 @@
-ARG TAG=0.1.6
+ARG TAG=0.1.7
 ARG IMAGE=ghcr.io/esgf-nimbus/earth-science-notebook
 FROM ${IMAGE}:${TAG}
 

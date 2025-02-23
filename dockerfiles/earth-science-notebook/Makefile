@@ -1,6 +1,6 @@
 .DEFAULT_GOAL = build
 
-VERSION = 0.1.6
+VERSION = 0.1.7
 
 release: POST_RELEASE = git add ../; git commit -m "Updates dask-gateway environment"
 
