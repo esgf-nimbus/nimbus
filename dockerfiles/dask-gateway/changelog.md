@@ -1,4 +1,7 @@
 # Changelog
+- Bump dask-gateway to 0.1.12 [3c4575d](https://github.com/esgf-nimbus/nimbus/commit/3c4575d) (2025-02-26)
+  - Updates dask-gateway environment [a8df373](https://github.com/esgf-nimbus/nimbus/commit/a8df373) (2025-02-22)
+  - Updates dask-gateway to 0.1.11 [2da060c](https://github.com/esgf-nimbus/nimbus/commit/2da060c) (2025-02-13)
 - Bump dask-gateway to 0.1.11 [8bcce6f](https://github.com/esgf-nimbus/nimbus/commit/8bcce6f) (2025-02-13)
   - Renames climate to earth-science [939838a](https://github.com/esgf-nimbus/nimbus/commit/939838a) (2025-02-13)
   - Updates changelog [6f96980](https://github.com/esgf-nimbus/nimbus/commit/6f96980) (2024-06-20)
